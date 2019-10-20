@@ -85,7 +85,6 @@ class Sync:
                         break
                 if not found:
                     requests.post(self.url+"/"+key, headers=self.auth(), json=ldata)
-        self.pull_data()
 
 
 if __name__ == "__main__":
