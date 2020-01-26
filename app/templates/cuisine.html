@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>BDE INFO - Kfet</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="../static/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+
+	<div class="bg-contact2" id="main-container" style="background-image: url('../static/images/bg-01.jpg');">
+		<div id="middle-container">
+            <div id="encours">
+				<h1 id="txtcom1">Sandwich 1</h1>
+                <div class="commis1">
+                    <h1>Commande 1</h1>
+					<p>Sandwich dinde - jambon - tomate</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+				</div>
+				<h1 id="txtcom2">Sandwich 2</h1 id="txtcom1">
+                <div class="commis2">
+                    <h1>Commande 2</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+				</div>
+				<h1 id="txtcom3">Sandwich 3</h1 id="txtcom1">
+                <div class="commis3">
+                    <h1>Commande 3</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+                </div>
+			</div>
+			<div id="realisee">
+			
+			</div>
+			<div id="attente">
+				
+				<div>
+                    <h1>Commande 4</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+					<p>Beignet Chocolat</p>
+				</div>
+				<div>
+                    <h1>Commande 5</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+				</div>
+				<div>
+                    <h1>Commande 6</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+				</div>
+				<div>
+                    <h1>Commande 7</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+				</div>
+				<div>
+                    <h1>Commande 8</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+				</div>
+				<div>
+                    <h1>Commande 9</h1>
+					<p>Sandwich dinde - jambon</p>
+					<p>Sauce ketchup - harissa</p>
+                    <p>Coca-cola</p>
+                    <p>Beignet Chocolat</p>
+                </div>
+			</div>
+        </div>
+	</div>
+
+	<script>
+	const encours=document.querySelector('#encours');
+	const attente=document.querySelector('#attente');
+	const realisee=document.querySelector('#realisee');
+	document.body.addEventListener('keyup', ev => {
+		if(!['1', '2', '3'].includes(ev.key)) return;
+		
+		let nth=+ev.key;
+		let elem=encours.querySelector(`.commis${nth}`);
+		let next=attente.querySelector('div');
+
+		if(!next) {
+
+			elem.classList.add('realisee');
+			realisee.appendChild(elem);
+
+		} else {
+			next.classList.add(`commis${nth}`);
+			encours.replaceChild(next, elem);
+
+			next.classList.add('realisee');
+			realisee.prepend(elem);
+			elem.classList.remove(`commis${nth}`);
+		}
+	});
+	</script>
+
+	
+<!--===============================================================================================-->
+	<script src="../static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/bootstrap/js/popper.js"></script>
+	<script src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/js/main.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-23581568-13');
+	</script>
+
+</body>
+</html>

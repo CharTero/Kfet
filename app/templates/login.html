@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="bg-contact2" style="background-image: url('../static/images/bg-01.jpg');">
+		<div class="container-contact2">
+			<div class="wrap-contact2">
+					<span class="contact2-form-title">
+						Connectez-vous
+					</span>
+					
+					<p>Membre Kfet :</p>
+					<form action="" method="post" novalidate>
+						{{ form.hidden_tag() }}
+						<p>
+							{{ form.username.label }}<br>
+							{{ form.username(size=32) }}<br>
+							{% for error in form.username.errors %}
+							<span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+						</p>
+						<p>
+							{{ form.password.label }}<br>
+							{{ form.password(size=32) }}<br>
+							{% for error in form.password.errors %}
+							<span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+						</p>
+						<p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+						<p>{{ form.submit() }}</p>
+					</form>
+					<!--
+					<div class="wrap-input2 validate-input" data-validate="Un nom est requis">
+						<input class="input2" type="text" name="name">
+						<span class="focus-input2" data-placeholder="Identifiant"></span>
+					</div>
+
+					<div class="wrap-input2 validate-input" data-validate = "Mot de passe incorrect">
+						<input class="input2" type="password" name="password">
+						<span class="focus-input2" data-placeholder="Mot de passe"></span>
+					</div>
+
+					<div id="fct">
+						<input type="radio" id="commis" name="fct">
+						<label for="commis">Commis</label>
+
+						<input type="radio" id="pc" name="fct">
+						<label for="pc">PC</label>
+
+						<input type="radio" id="guest" name="fct">
+						<label for="guest">Guest</label>
+					</div>
+
+					<div class="container-contact2-form-btn">
+						<div class="wrap-contact2-form-btn">
+							<div class="contact2-form-bgbtn"></div>
+							<button class="contact2-form-btn" onclick="window.location.href ='pc.html'">
+								Se connecter
+							</button>
+						</div>
+					</div>
+					-->
+			</div>
+		</div>
+	</div>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/select2/select2.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

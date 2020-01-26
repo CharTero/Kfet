@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>BDE INFO - Kfet</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="../static/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+	<nav>
+		<ul>
+			<a href="stocks.html"><li>Stocks</li></a>
+			<a href="menu.html"><li>Menu</li></a>
+			<a href="#popup"><li id="deco">Se déconnecter</li></a>
+		</ul>
+	</nav>
+	<div id="popup">
+		<h1>Voulez vous vraiment vous déconnecter ?</h1>
+		<div class="container-contact2-form-btn">
+			<div class="wrap-contact2-form-btn">
+				<div class="contact2-form-bgbtn"></div>
+				<a href="#"><button class="contact2-form-btn">
+					Annuler
+				</button></a>
+			</div>
+		</div>
+		<div class="container-contact2-form-btn">
+			<div class="wrap-contact2-form-btn">
+				<div class="contact2-form-bgbtn"></div>
+				<a href="login.html"><button class="contact2-form-btn">
+					Déconnexion
+				</button></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="bg-contact2" id="main-container" style="background-image: url('../static/images/bg-01.jpg');">
+		<form class="container" action="#">
+			<div id="plat">
+				<h1>PLATS</h1>
+				<ul>
+					<li><input type="radio" name="plat" id="sandwich">
+					<label for="sandwich">Sandwich</label></li>
+					<li><input type="radio" name="plat" id="sandwichS">
+					<label for="sandwichS">Sandwich Surprise</label></li>
+				</ul>
+			</div>
+			<div id="ingredient">
+				<h1>INGREDIENTS</h1>
+				<ul>
+					<li><input type="checkbox" name="ingredient" id="dinde">
+					<label for="dinde">Dinde</label></li>
+					<li><input type="checkbox" name="ingredient" id="jambon">
+					<label for="jambon">Jambon</label></li>
+				</ul>
+			</div>
+			<div id="sauce">
+				<h1>SAUCES</h1>
+				<ul>
+					<li><input type="checkbox" name="sauce" id="beurre">
+					<label for="beurre">Beurre</label></li>
+					<li><input type="checkbox" name="sauce" id="beurreS">
+					<label for="beurreS">Beurre Salé</label></li>
+				</ul>
+			</div>
+			<div id="boisson">
+				<h1>BOISSONS</h1>
+				<ul>
+					<li><input type="radio" name="boisson" id="coca">
+					<label for="coca">Coca-Cola</label></li>
+					<li><input type="radio" name="boisson" id="icetea">
+					<label for="icetea">Ice-Tea</label></li>
+				</ul>
+			</div>
+			<div id="dessert">
+				<h1>DESSERTS</h1>
+				<ul>
+					<li><input type="radio" name="dessert" id="beignetC">
+					<label for="beignetC">Beignet Chocolat</label></li>
+					<li><input type="radio" name="dessert" id="beignetF">
+					<label for="beignetF">Beignet Framboise</label></li>
+				</ul>
+			</div>
+			<div id="resume">
+				<h1>Commande 1</h1>
+				<p>Sandwich dinde - jambon</p>
+				<p>Coca-cola</p>
+				<p>Beignet Chocolat</p>
+				<div class="no-margin">
+					<input type="checkbox" checked name="paiement" id="payer">
+					<label for="payer">Payée</label>
+				</div>
+				<button onclick="valider()" class="validation" type="submit">Valider</button>
+				<h2>3,40€</h2>
+				
+			</div>
+		</form>
+		<div class="liste">
+			
+			
+
+		</div>
+	</div>
+
+
+<script>
+	//Récup de la liste
+	const liste = document.querySelector('.liste');
+	//Numéro de commande
+	var idcom = 1;
+
+	//Création de la div
+
+	document.querySelector('#resume button').addEventListener('click', ev => {
+
+			var newDiv = document.createElement("div");
+			//Ajout de la div avec classe com
+			newDiv.classList.add('com');
+			liste.append(newDiv);
+			//Création des variables
+			var numCom = document.createElement("h1");
+			var subDiv = document.createElement("div");
+			var p1 = document.createElement("p");
+			var p2 = document.createElement("p");
+			var p3 = document.createElement("p");
+			var p4 = document.createElement("p");
+			var btn1 = document.createElement("button");
+			var btn2 = document.createElement("button");
+			var plat = document.querySelector('#resume :nth-child(2)');
+			//Attribution des classes
+			subDiv.classList.add('spec');
+			btn1.classList.add('annuler');
+			btn2.classList.add('donner');
+			//Attribution des Labels
+			numCom.innerHTML = `Commande ${idcom}`;
+			p1.innerHTML = `${plat}`;
+			p2.innerHTML = "Jambon - Tomate - Brie";
+			p3.innerHTML = "Boisson surprise";
+			p4.innerHTML = "Panini nutella";
+			btn1.innerHTML = "Annuler";
+			btn2.innerHTML = "Donnée";
+			//Intégration des variables
+			newDiv.append(numCom);
+			newDiv.append(subDiv);
+			subDiv.append(p1);
+			subDiv.append(p2);
+			subDiv.append(p3);
+			subDiv.append(p4);
+			subDiv.append(btn1);
+			newDiv.append(btn2);
+			idcom = idcom+1;
+			document.querySelector('#resume>h1').innerHTML = `Commande ${idcom}`;
+
+	});
+
+	
+
+	document.querySelectorAll('.liste .com').forEach(e => {
+		e.addEventListener('click', ev => {
+			e.classList.toggle('show-spec');
+		});
+		e.querySelector('.donner').addEventListener('click', ev => {
+			ev.stopPropagation();
+			e.classList.remove('show-spec');
+			e.classList.add('donnee');
+			liste.appendChild(e);
+		});
+		e.querySelector('.annuler').addEventListener('click', ev => {
+			e.classList.remove('donnee');
+			e.classList.remove('probleme');
+			e.classList.remove('show-spec');
+			liste.prepend(e);
+			ev.stopPropagation();
+		});
+		e.querySelector('.erreur').addEventListener('click', ev => {
+			ev.stopPropagation();
+			e.classList.remove('show-spec');
+			e.classList.add('probleme');
+			liste.appendChild(e);
+		});
+	});
+</script>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="../static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/bootstrap/js/popper.js"></script>
+	<script src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/js/main.js"></script>
+
+</body>
+</html>
