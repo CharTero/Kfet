@@ -1,31 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>BDE INFO - Kfet</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="../static/images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../static/css/util.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
-<!--===============================================================================================-->
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
 	<nav>
 		<ul>
-			<a href="stocks.html"><li>Stocks</li></a>
-			<a href="menu.html"><li>Menu</li></a>
+			<a href="{{ url_for('stocks') }}"><li>Stocks</li></a>
+			<a href="{{ url_for('menu') }}"><li>Menu</li></a>
 			<a href="#popup"><li id="deco">Se déconnecter</li></a>
 		</ul>
 	</nav>
@@ -42,7 +21,7 @@
 		<div class="container-contact2-form-btn">
 			<div class="wrap-contact2-form-btn">
 				<div class="contact2-form-bgbtn"></div>
-				<a href="login.html"><button class="contact2-form-btn">
+				<a href="{{ url_for('logout') }}"><button class="contact2-form-btn">
 					Déconnexion
 				</button></a>
 			</div>
@@ -111,103 +90,135 @@
 			</div>
 		</form>
 		<div class="liste">
-			
-			
 
 		</div>
 	</div>
 
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 <script>
-	//Récup de la liste
-	const liste = document.querySelector('.liste');
-	//Numéro de commande
-	var idcom = 1;
+	let socket = io();
+	let list = document.querySelector('.liste');
 
-	//Création de la div
+	function addcmd(id, plate, content, drink, dessert, state) {
+		let newDiv = document.createElement("div");
+		newDiv.classList.add('com');
+		newDiv.id = `cmd${id}`;
+		$(list).append(newDiv);
+		let numCom = document.createElement("h1");
+		let subDiv = document.createElement("div");
+		let p1 = document.createElement("p");
+		let p2 = document.createElement("p");
+		let p3 = document.createElement("p");
+		let p4 = document.createElement("p");
+		let btn1 = document.createElement("button");
+		let btn2 = document.createElement("button");
+		let btn3 = document.createElement("button");
+		subDiv.classList.add('spec');
+		btn1.classList.add('annuler');
+		btn2.classList.add('donner');
+		btn3.classList.add('erreur');
+		numCom.innerHTML = `Commande ${id}`;
+		p1.innerHTML = plate;
+		p2.innerHTML = content;
+		p3.innerHTML = drink;
+		p4.innerHTML = dessert;
+		btn1.innerHTML = "Annuler";
+		btn2.innerHTML = "Donnée";
+		btn3.innerHTML = "Erreur";
+		newDiv.append(numCom);
+		newDiv.append(subDiv);
+		subDiv.append(p1);
+		subDiv.append(p2);
+		subDiv.append(p3);
+		subDiv.append(p4);
+		subDiv.append(btn1);
+		newDiv.append(btn2);
+		newDiv.append(btn3);
+		document.querySelector('#resume>h1').innerHTML = `Commande ${id+1}`;
+		newDiv.addEventListener('click', ev => {
+			newDiv.classList.toggle('show-spec');
+		});
+		newDiv.querySelector('.donner').addEventListener('click', ev => {
+			ev.stopPropagation();
+			socket.emit("give command", {"id": id});
+		});
+		newDiv.querySelector('.annuler').addEventListener('click', ev => {
+			ev.stopPropagation();
+			socket.emit("clear command", {"id": id});
+		});
+		newDiv.querySelector('.erreur').addEventListener('click', ev => {
+			ev.stopPropagation();
+			socket.emit("error command", {"id": id});
+		});
+		switch (state) {
+			case "gave":
+				give(newDiv);
+				break;
+			case "error":
+				error(newDiv);
+				break;
+		}
+	}
 
-	document.querySelector('#resume button').addEventListener('click', ev => {
+	function clear(e) {
+		e.classList.remove('donnee');
+		e.classList.remove('probleme');
+		e.classList.remove('show-spec');
+		list.prepend(e);
+	}
 
-			var newDiv = document.createElement("div");
-			//Ajout de la div avec classe com
-			newDiv.classList.add('com');
-			liste.append(newDiv);
-			//Création des variables
-			var numCom = document.createElement("h1");
-			var subDiv = document.createElement("div");
-			var p1 = document.createElement("p");
-			var p2 = document.createElement("p");
-			var p3 = document.createElement("p");
-			var p4 = document.createElement("p");
-			var btn1 = document.createElement("button");
-			var btn2 = document.createElement("button");
-			var plat = document.querySelector('#resume :nth-child(2)');
-			//Attribution des classes
-			subDiv.classList.add('spec');
-			btn1.classList.add('annuler');
-			btn2.classList.add('donner');
-			//Attribution des Labels
-			numCom.innerHTML = `Commande ${idcom}`;
-			p1.innerHTML = `${plat}`;
-			p2.innerHTML = "Jambon - Tomate - Brie";
-			p3.innerHTML = "Boisson surprise";
-			p4.innerHTML = "Panini nutella";
-			btn1.innerHTML = "Annuler";
-			btn2.innerHTML = "Donnée";
-			//Intégration des variables
-			newDiv.append(numCom);
-			newDiv.append(subDiv);
-			subDiv.append(p1);
-			subDiv.append(p2);
-			subDiv.append(p3);
-			subDiv.append(p4);
-			subDiv.append(btn1);
-			newDiv.append(btn2);
-			idcom = idcom+1;
-			document.querySelector('#resume>h1').innerHTML = `Commande ${idcom}`;
+	function give(e) {
+		e.classList.remove('show-spec');
+		e.classList.add('donnee');
+		list.appendChild(e);
+	}
 
+	function error(e) {
+		e.classList.remove('show-spec');
+		e.classList.add('probleme');
+		list.appendChild(e);
+	}
+
+	socket.on("command list", function (data) {
+		var child = list.lastElementChild;
+		while (child) {
+			list.removeChild(child);
+			child = list.lastElementChild;
+		}
+		for (let c of data.list) {
+			addcmd(c.id, c.plate, c.content, c.drink, c.dessert, c.state);
+		}
 	});
 
-	
+	socket.on("new command", function (data) {
+		addcmd(data.id, data.plate, data.content, data.drink, data.dessert, data.state);
+	});
 
-	document.querySelectorAll('.liste .com').forEach(e => {
-		e.addEventListener('click', ev => {
-			e.classList.toggle('show-spec');
-		});
-		e.querySelector('.donner').addEventListener('click', ev => {
-			ev.stopPropagation();
-			e.classList.remove('show-spec');
-			e.classList.add('donnee');
-			liste.appendChild(e);
-		});
-		e.querySelector('.annuler').addEventListener('click', ev => {
-			e.classList.remove('donnee');
-			e.classList.remove('probleme');
-			e.classList.remove('show-spec');
-			liste.prepend(e);
-			ev.stopPropagation();
-		});
-		e.querySelector('.erreur').addEventListener('click', ev => {
-			ev.stopPropagation();
-			e.classList.remove('show-spec');
-			e.classList.add('probleme');
-			liste.appendChild(e);
-		});
+	socket.on("cleared command", function (data) {
+		clear(document.querySelector(`.liste #cmd${data.id}`));
+	});
+
+	socket.on("gave command", function (data) {
+		give(document.querySelector(`.liste #cmd${data.id}`));
+	});
+
+	socket.on("glitched command", function (data) {
+		error(document.querySelector(`.liste #cmd${data.id}`));
+	});
+
+	document.querySelector('#resume button').addEventListener('click', ev => {
+		socket.emit("add command", {"plate": document.querySelector('#resume :nth-child(2)'), "content": "Jambon - Tomate - Brie", "drink": "Boisson surprise", "dessert": "Panini nutella"});
 	});
 </script>
 
 
-
-
 <!--===============================================================================================-->
-	<script src="../static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
 <!--===============================================================================================-->
-	<script src="../static/vendor/bootstrap/js/popper.js"></script>
-	<script src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
 <!--===============================================================================================-->
-	<script src="../static/vendor/select2/select2.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/select2/select2.min.js') }}"></script>
 <!--===============================================================================================-->
-	<script src="../static/js/main.js"></script>
-
-</body>
-</html>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

@@ -40,25 +40,83 @@ def index():
 
 @app.route("/pc")
 @login_required
-def root():
+def pc():
     return render_template("pc.html")
+
+
+@app.route("/stocks")
+@login_required
+def stocks():
+    return render_template("stocks.html")
+
+
+@app.route("/menu")
+@login_required
+def menu():
+    return render_template("menu.html")
+
+
+commands = [
+    {
+        "id": 1,
+        "plate": "sanddwitch",
+        "content": "Jambon - Tomate - Brie",
+        "drink": "Boisson surprise",
+        "dessert": "Panini nutella",
+        "state": "waiting"
+    },
+    {
+        "id": 2,
+        "plate": "sanddwitch",
+        "content": "Jambon - Tomate - Brie",
+        "drink": "Boisson surprise",
+        "dessert": "Panini nutella",
+        "state": "gave"
+    },
+    {
+        "id": 3,
+        "plate": "sanddwitch",
+        "content": "Jambon - Tomate - Brie",
+        "drink": "Boisson surprise",
+        "dessert": "Panini nutella",
+        "state": "error"
+    }
+]
 
 
 @socketio.on("connect")
 def test_connect():
-    emit("my response", {"data": "Connected"})
+    emit("command list", {"list": commands, "idcom": len(commands)})
 
 
-@socketio.on("disconnect")
-def test_disconnect():
-    print("Client disconnected")
+@socketio.on("add command")
+def addcmd(json):
+    commands.append({"id": len(commands)+1, "plate": json["plate"], "content": json["content"], "drink": json["drink"], "dessert": json["dessert"], "state": "waiting"})
+    emit("new command", commands[-1], broadcast=True)
 
 
-@socketio.on("message")
-def handle_message(message):
-    print("received message: " + message)
+@socketio.on("clear command")
+def rmcmd(json):
+    for i, c in enumerate(commands):
+        if c["id"] == json["id"]:
+            c["state"] = "waiting"
+            break
+    emit("cleared command", {"id": json["id"]}, broadcast=True)
 
 
-@socketio.on("my event")
-def handle_my_custom_event(json):
-    print("received json: " + str(json))
+@socketio.on("give command")
+def givecmd(json):
+    for i, c in enumerate(commands):
+        if c["id"] == json["id"]:
+            c["state"] = "gave"
+            break
+    emit("gave command", {"id": json["id"]}, broadcast=True)
+
+
+@socketio.on("error command")
+def errcmd(json):
+    for i, c in enumerate(commands):
+        if c["id"] == json["id"]:
+            c["state"] = "error"
+            break
+    emit("glitched command", {"id": json["id"]}, broadcast=True)
