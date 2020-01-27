@@ -1,11 +1,23 @@
+import functools
+
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_user, logout_user, login_required
-from flask_socketio import emit
+from flask_socketio import emit, disconnect
 from werkzeug.urls import url_parse
 
 from app import app, socketio
 from app.forms import LoginForm
 from app.models import User
+
+
+def authenticated_only(f):
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        if not current_user.is_authenticated:
+            disconnect()
+        else:
+            return f(*args, **kwargs)
+    return wrapped
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -61,6 +73,7 @@ commands = [
         "id": 1,
         "plate": "sanddwitch",
         "content": "Jambon - Tomate - Brie",
+        "sauce": "curry",
         "drink": "Boisson surprise",
         "dessert": "Panini nutella",
         "state": "waiting"
@@ -69,6 +82,7 @@ commands = [
         "id": 2,
         "plate": "sanddwitch",
         "content": "Jambon - Tomate - Brie",
+        "sauce": "bbc",
         "drink": "Boisson surprise",
         "dessert": "Panini nutella",
         "state": "gave"
@@ -77,6 +91,7 @@ commands = [
         "id": 3,
         "plate": "sanddwitch",
         "content": "Jambon - Tomate - Brie",
+        "sauce": "mayo",
         "drink": "Boisson surprise",
         "dessert": "Panini nutella",
         "state": "error"
@@ -85,17 +100,27 @@ commands = [
 
 
 @socketio.on("connect")
-def test_connect():
-    emit("command list", {"list": commands, "idcom": len(commands)})
+@authenticated_only
+def connect():
+    print("New connection")
+    emit("connect", "ok")
+
+
+@socketio.on("list command")
+@authenticated_only
+def lscmd():
+    emit("list command", {"list": commands, "idcom": len(commands)})
 
 
 @socketio.on("add command")
+@authenticated_only
 def addcmd(json):
-    commands.append({"id": len(commands)+1, "plate": json["plate"], "content": json["content"], "drink": json["drink"], "dessert": json["dessert"], "state": "waiting"})
+    commands.append({"id": len(commands)+1, "plate": json["plate"], "content": json["content"], "sauce": json["sauce"], "drink": json["drink"], "dessert": json["dessert"], "state": "waiting"})
     emit("new command", commands[-1], broadcast=True)
 
 
 @socketio.on("clear command")
+@authenticated_only
 def rmcmd(json):
     for i, c in enumerate(commands):
         if c["id"] == json["id"]:
@@ -105,6 +130,7 @@ def rmcmd(json):
 
 
 @socketio.on("give command")
+@authenticated_only
 def givecmd(json):
     for i, c in enumerate(commands):
         if c["id"] == json["id"]:
@@ -114,6 +140,7 @@ def givecmd(json):
 
 
 @socketio.on("error command")
+@authenticated_only
 def errcmd(json):
     for i, c in enumerate(commands):
         if c["id"] == json["id"]:
