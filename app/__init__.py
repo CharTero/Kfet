@@ -14,4 +14,4 @@ login = LoginManager(app)
 login.login_view = 'login'
 socketio = SocketIO(app)
 
-from app import routes
+from app import routes, sockets
