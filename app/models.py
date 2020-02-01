@@ -39,7 +39,7 @@ class Command(db.Model):
     number = db.Column(db.Integer, nullable=False)
 
     pc_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    sandwitch_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    sandwitch_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     client_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     date = db.Column(db.Date, default=datetime.datetime.now().date)

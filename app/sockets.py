@@ -19,7 +19,7 @@ def authenticated_only(f):
 
 
 def command_json(c):
-    content = " - ".join([s.id for s in c.content])
+    ingredient = " - ".join([s.id for s in c.content])
     sauces = " - ".join([s.id for s in c.sauce])
     if c.error:
         state = "error"
@@ -31,7 +31,7 @@ def command_json(c):
         state = "waiting"
     else:
         state = "unknown"
-    return {"id": c.number, "plate": c.plate_id, "content": content, "sauce": sauces, "drink": c.drink_id, "dessert": c.dessert_id, "state": state}
+    return {"id": c.number, "plate": c.plate_id, "ingredient": ingredient, "sauce": sauces, "drink": c.drink_id, "dessert": c.dessert_id, "state": state}
 
 
 @socketio.on("connect")
@@ -59,17 +59,7 @@ def addcmd(json):
         c.number = Command.query.filter_by(date=datetime.datetime.now().date()).order_by(Command.number.desc()).first().number+1
     except AttributeError:
         c.number = 1
-
-    if "pc" in json:
-        try:
-            c.pc_id = User.query.get(json["pc"]).id
-        except AttributeError:
-            c.pc_id = 0
-    if "sandwitch" in json:
-        try:
-            c.sandwitch_id = User.query.get(json["sandwitch"]).id
-        except AttributeError:
-            c.sandwitch_id = 0
+    c.pc_id = current_user.id
     if "client" in json:
         try:
             c.client_id = User.query.get(json["client"]).id
@@ -80,8 +70,8 @@ def addcmd(json):
             c.plate_id = Plate.query.get(json["plate"]).id
         except AttributeError:
             pass
-    if "content" in json:
-        for i in json["content"]:
+    if "ingredient" in json:
+        for i in json["ingredient"]:
             try:
                 c.content.append(Ingredient.query.get(i))
             except AttributeError:
