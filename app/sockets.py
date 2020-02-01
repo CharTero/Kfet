@@ -89,7 +89,7 @@ def addcmd(json):
     if "sauce" in json:
         for s in json["sauce"]:
             try:
-                c.sauce.append(Sauce.guery.get(s))
+                c.sauce.append(Sauce.query.get(s))
             except AttributeError:
                 pass
     if "drink" in json:
