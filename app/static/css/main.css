@@ -34,7 +34,8 @@
 
 body, html {
 	height: 100%;
-	font-family: Poppins-Regular, sans-serif;
+  font-family: Poppins-Regular, sans-serif;
+  background-color: rgb(20, 20, 20);
 }
 
 /*---------------------------------------------*/
@@ -68,7 +69,7 @@ p {
 	font-family: Poppins-Regular;
 	font-size: 14px;
 	line-height: 1.7;
-	color: #666666;
+	color: #e7e7e7;
 	margin: 0px;
 }
 
@@ -442,14 +443,10 @@ textarea.input2 + .focus-input2::after {
 }
 
 .container{
-  background: rgba(219,21,99,0.8);
-  background: -webkit-linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
-  background: -o-linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
-  background: -moz-linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
-  background: linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
+
   display: flex;
   flex-wrap: wrap;
-  min-height: 100vh;
+  height:40vh;
   width: 100%;
   justify-content: space-around;
   align-items: flex-start;
@@ -463,16 +460,17 @@ textarea.input2 + .focus-input2::after {
 }
 
 .container div{
-  background-color: white;
+  background-color: rgb(54, 54, 54);
   padding: 1vw;
   margin-top: 2vh;
   border-radius: 1vw;
+  color: rgb(206, 206, 206);
 }
 
 .liste{
   width: 27%;
-  height: 100vh;
-  background-color: rgba(211, 211, 211, 0.938);
+  height: 91vh;
+  background-color: rgba(87, 87, 87, 0.938);
   overflow: scroll;
 }
 
@@ -481,11 +479,19 @@ textarea.input2 + .focus-input2::after {
   flex-wrap: nowrap;
 }
 
+.liste button{
+  padding: 0.5vw;
+  font-size: 20px;
+  border-radius: 0.5vw;
+  display: block;
+  margin: auto;
+}
+
 .liste div{
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(131, 131, 131);
   padding: 0.5vw;
   border-bottom-left-radius: 2vw;
-  box-shadow: 10px 8px 5px grey;
+  box-shadow: 10px 8px 5px rgb(0, 0, 0);
   margin-top: 1vh;
   cursor: pointer;
 }
@@ -495,12 +501,9 @@ textarea.input2 + .focus-input2::after {
 }
 
 .liste div button{
-  background-color: rgb(3, 177, 41);
-  border-radius: 0.5vw;
-  display: block;
-  margin: auto;
-  margin-top: 0.5vw;
-  padding: 0.2vw;
+  background-color: rgb(0, 105, 0);
+  color: rgb(206, 206, 206);
+  
 }
 
 .liste .spec{
@@ -513,6 +516,7 @@ textarea.input2 + .focus-input2::after {
 }
 
 .liste .annuler {
+  background-color: rgb(179, 179, 179);
   display: none;
 }
 
@@ -521,11 +525,11 @@ textarea.input2 + .focus-input2::after {
 }
 
 .liste .donnee {
-  background-color: rgb(0, 185, 0);
+  background-color: rgb(0, 105, 0);
 }
 
 .liste .probleme {
-  background-color: rgb(240, 6, 6);
+  background-color: rgb(133, 1, 1);
 }
 
 .liste .probleme .erreur, .liste .probleme .donner{
@@ -534,11 +538,11 @@ textarea.input2 + .focus-input2::after {
 
 .liste .probleme .annuler{
   display: block;
+  color: black;
 }
 
 .liste .erreur{
-  background-color: rgb(240, 6, 6);
-  padding: 0.2vw;
+  background-color: rgb(133, 1, 1);
 }
 
 .liste .donnee .donner, .liste .donnee .erreur{
@@ -547,29 +551,26 @@ textarea.input2 + .focus-input2::after {
 
 .liste .donnee .annuler{
   display : block;
+  color: black;
 }
 
-div#resume{
-  position: fixed;
-  width: 20%;
-  bottom:0;
-  left: 0;
-  border-radius: 0;
-}
 
 div#resume h2{
   padding: 0.5vw;
-  background-color: lightgrey;
-  box-shadow: 10px 8px 5px grey;
+  background-color: rgb(116, 116, 116);
+  box-shadow: 10px 8px 5px rgb(0, 0, 0);
   border-top-right-radius: 1vw;
+  color: black;
   border-bottom-right-radius: 1vw;
+  border-top-left-radius: 1vw;
+  border-bottom-left-radius: 1vw;
 }
 
 div#resume button{
   background-color: rgba(213,0,125,0.8);
-  padding: 0.5vw;
+  padding: 0.8vw;
   float: right;
-  box-shadow: 10px 8px 5px grey;
+  box-shadow: 10px 8px 5px rgb(0, 0, 0);
   font-size: 1.48rem;
   border-top-right-radius: 1vw;
   border-bottom-right-radius: 1vw;
@@ -617,6 +618,7 @@ nav ul li{
   float: left;
   padding : 0.2vw 2vw;
   cursor: pointer;
+  color: white;
 }
 
 nav ul li:hover{
@@ -639,8 +641,9 @@ audio{
   left: 18%;
   padding: 1vw;
   border-radius: 2vw;
-  background-color: white;
-  box-shadow: 10px 8px 5px grey;
+  background-color: rgb(32, 32, 32);
+  box-shadow: 10px 8px 5px rgb(0, 0, 0);
+  color: white;
   z-index: 1;
   display:none;
 }
@@ -661,7 +664,7 @@ audio{
 
 #encours{
   display: flex;
-  background-color: rgba(190, 187, 14, 0.733);
+  background-color: rgba(139, 91, 1, 0.87);
   flex-wrap : nowrap;
   flex-direction: row;
   width: 100%;
@@ -669,23 +672,23 @@ audio{
 }
 
 #encours div{
-  background-color: rgb(248, 234, 103);
+  background-color: rgb(192, 112, 7);
   padding: 1vw;
-  margin-top: 10vh;
+  margin-top: 5vh;
   height: 25vh;
   border-radius: 0.5vw;
 }
 
 #attente{
   display: flex;
-  background-color: rgba(255, 0, 0, 0.466);
+  background-color: rgba(110, 1, 1, 0.466);
   flex-wrap: wrap;
   justify-content: space-around;
   width: 100%;
 }
 
 #attente div{
-  background-color: rgb(253, 121, 121);
+  background-color: rgb(190, 101, 101);
   padding: 1vw;
   margin-top: 2vh;
   border-radius: 0.5vw;
@@ -697,7 +700,7 @@ audio{
 }
 
 #realisee{
-  background-color: rgba(0, 255, 0, 0.479);
+  background-color: rgba(3, 102, 3, 0.849);
   display: flex;
   flex-wrap: wrap;
   flex-direction: row-reverse;
@@ -706,7 +709,7 @@ audio{
 }
 
 #realisee div{
-  background-color: rgb(116, 240, 100);
+  background-color: rgb(86, 158, 75);
   padding: 1vw;
   margin-top: 2vh;
   border-radius: 0.5vw;
@@ -721,18 +724,13 @@ audio{
   display: none;
 }
 
+
+
 #encours>h1{
   position: fixed;
   top: 2%;
 }
 
-#txtcom1{
-  left: 8%;
-}
-
-#txtcom3{
-  right: 8%;
-}
 
 input[type=number]{
   width: 10%;
@@ -740,7 +738,42 @@ input[type=number]{
   font-size: 20px;
 }
 
-
 form>div{
-  box-shadow: 10px 8px 5px rgb(73, 73, 73);
+  box-shadow: 10px 8px 5px rgb(32, 32, 32);
+}
+
+.com h1{
+  text-align: center;
+  color: rgb(255, 255, 255);
+  width: 10%;
+}
+
+.com>button{
+  float: right;
+}
+
+#resume input#user {
+  width: 80%;
+  font-size: 25px;
+  background-color: grey;
+  margin-bottom: 1vh;
+}
+
+@media only screen and (max-width: 768px) {
+
+
+  .liste{
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 1000px){
+  
+div#resume{
+  position: fixed;
+  width: 20%;
+  bottom:0;
+  left: 0;
+  border-radius: 0;
+}
 }

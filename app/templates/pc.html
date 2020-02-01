@@ -62,10 +62,7 @@
 				<p></p>
 				<p></p>
 				<p></p>
-				<div class="no-margin">
-					<input type="checkbox" checked name="paiement" id="payer">
-					<label for="payer">Payée</label>
-				</div>
+				<input id="user" type="text" placeholder="Username">
 				<button class="validation" type="submit">Valider</button>
 				<h2>3,40€</h2>
 				
@@ -79,6 +76,5 @@
 <!--===============================================================================================-->
 <script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-<!--===============================================================================================-->
 <script src="{{ url_for('static', filename='js/pc.js') }}"></script>
 {% endblock %}

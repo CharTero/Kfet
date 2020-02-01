@@ -10,7 +10,7 @@ let radios = {"plate": null};
 
 
 function addcmd(id, plate, content, sauce, drink, dessert, state) {
-    $(list).append(`<div class='com' id='cmd${id}'> <h1>Commande ${id}</h1> <div class='spec'> <p>${plate}</p><p>${content}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class='annuler' onclick='annuler(${id})'>Annuler</button> </div><button class='donner' onclick='donner(${id})'>Donnée</button><button class='erreur' onclick='erreur(${id})'>Erreur</button> </div>`);
+    $(list).append(`<div class='com' id='cmd${id}'> <button class='donner' onclick='donner(${id})'>Donnée</button> <h1>${id}</h1> <div class='spec'> <p>${plate}</p><p>${content}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class='annuler' onclick='annuler(${id})'>Annuler</button><button class='erreur' onclick='erreur(${id})'>Erreur</button> </div> </div>`);
     let e = document.querySelector(`.liste #cmd${id}`);
     e.addEventListener( "click" ,env => {
         env.stopPropagation();
