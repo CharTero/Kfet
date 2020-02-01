@@ -100,7 +100,6 @@ def lscmd():
         commands.append(command_json(c))
 
     emit("list command", {"list": commands})
-    # TODO: add auto disable checkbox when no plate selected or specific plate
 
 
 @socketio.on("add command")
@@ -199,3 +198,48 @@ def errcmd(json):
         c.error = True
         db.session.commit()
         emit("glitched command", {"id": json["id"]}, broadcast=True)
+
+
+@socketio.on("list plate")
+@authenticated_only
+def lsplate():
+    plates = []
+    for p in Plate.query.all():
+        plates.append({"id": p.id, "name": p.name})
+    emit("list plate", {"list": plates})
+
+
+@socketio.on("list ingredient")
+@authenticated_only
+def lsingredient():
+    ingredients = []
+    for p in Ingredient.query.all():
+        ingredients.append({"id": p.id, "name": p.name})
+    emit("list ingredient", {"list": ingredients})
+
+
+@socketio.on("list sauce")
+@authenticated_only
+def lssauce():
+    sauces = []
+    for p in Sauce.query.all():
+        sauces.append({"id": p.id, "name": p.name})
+    emit("list sauce", {"list": sauces})
+
+
+@socketio.on("list drink")
+@authenticated_only
+def lsdrink():
+    drinks = []
+    for p in Drink.query.all():
+        drinks.append({"id": p.id, "name": p.name})
+    emit("list drink", {"list": drinks})
+
+
+@socketio.on("list dessert")
+@authenticated_only
+def lsdessert():
+    desserts = []
+    for p in Dessert.query.all():
+        desserts.append({"id": p.id, "name": p.name})
+    emit("list dessert", {"list": desserts})
