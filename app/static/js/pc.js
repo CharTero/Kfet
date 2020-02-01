@@ -1,20 +1,32 @@
 let socket = io();
-let plate = document.querySelector('#plat ul');
-let ingredient = document.querySelector('#ingredient ul');
-let sauce = document.querySelector('#sauce ul');
-let drink = document.querySelector('#boisson ul');
-let dessert = document.querySelector('#dessert ul');
-let list = document.querySelector('.liste');
+let plate = document.querySelector("#plat ul");
+let ingredient = document.querySelector("#ingredient ul");
+let sauce = document.querySelector("#sauce ul");
+let drink = document.querySelector("#boisson ul");
+let dessert = document.querySelector("#dessert ul");
+let list = document.querySelector(".liste");
 let current = {"plate": null, "content": [], "sauce": [], "drink": null, "dessert": null};
 let radios = {"plate": null};
 
 
 function addcmd(id, plate, content, sauce, drink, dessert, state) {
-    $(list).append(`<div class='com' id='cmd${id}'> <button class='donner' onclick='donner(${id})'>Donnée</button> <h1>${id}</h1> <div class='spec'> <p>${plate}</p><p>${content}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class='annuler' onclick='annuler(${id})'>Annuler</button><button class='erreur' onclick='erreur(${id})'>Erreur</button> </div> </div>`);
+    $(list).append(`<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <p>${plate}</p><p>${content}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
     let e = document.querySelector(`.liste #cmd${id}`);
-    e.addEventListener( "click" ,env => {
-        env.stopPropagation();
+    e.addEventListener( "click" ,ev => {
+        ev.stopPropagation();
         e.classList.toggle("show-spec");
+    });
+    e.querySelector(".donner").addEventListener("click", ev => {
+        ev.stopPropagation();
+        socket.emit("give command", {"id": id});
+    });
+    e.querySelector(".annuler").addEventListener("click", ev => {
+        ev.stopPropagation();
+        socket.emit("clear command", {"id": id});
+    });
+    e.querySelector(".erreur").addEventListener("click", ev => {
+        ev.stopPropagation();
+        socket.emit("error command", {"id": id});
     });
     switch (state) {
         case "done":
@@ -27,7 +39,7 @@ function addcmd(id, plate, content, sauce, drink, dessert, state) {
             error(e);
             break;
     }
-    document.querySelector('#resume>h1').innerHTML = `Commande ${id+1}`;
+    document.querySelector("#resume>h1").innerHTML = `Commande ${id+1}`;
 }
 
 function addplate(id, name) {
@@ -139,41 +151,31 @@ function adddessert(id, name) {
 }
 
 function clear(e) {
-    e.classList.remove('finis');
-    e.classList.remove('donnee');
-    e.classList.remove('probleme');
-    e.classList.remove('show-spec');
+    e.classList.remove("finis");
+    e.classList.remove("donnee");
+    e.classList.remove("probleme");
+    e.classList.remove("show-spec");
     list.prepend(e);
 }
 
 function done(e) {
-    e.classList.remove('show-spec');
-    e.classList.add('finis');
+    e.classList.remove("show-spec");
+    e.classList.add("finis");
 }
 
 function give(e) {
-    e.classList.remove('show-spec');
-    e.classList.add('donnee');
+    e.classList.remove("show-spec");
+    e.classList.add("donnee");
     list.appendChild(e);
 }
 
 function error(e) {
-    e.classList.remove('show-spec');
-    e.classList.add('probleme');
+    e.classList.remove("show-spec");
+    e.classList.add("probleme");
     list.appendChild(e);
 }
 
-function donner(id) {
-    socket.emit("give command", {"id": id});
-}
-function annuler(id) {
-    socket.emit("clear command", {"id": id});
-}
-function erreur(id) {
-    socket.emit("error command", {"id": id});
-}
-
-socket.on("connect", function (data) {
+socket.on("connect", data => {
     if (data === "ok") {
         socket.emit("list plate");
         socket.emit("list ingredient");
@@ -184,7 +186,7 @@ socket.on("connect", function (data) {
     }
 });
 
-socket.on("list command", function (data) {
+socket.on("list command", data => {
     let child = list.lastElementChild;
     while (child) {
         list.removeChild(child);
@@ -195,7 +197,7 @@ socket.on("list command", function (data) {
     }
 });
 
-socket.on("list plate", function (data) {
+socket.on("list plate", data => {
     let child = plate.lastElementChild;
     while (child) {
         plate.removeChild(child);
@@ -206,7 +208,7 @@ socket.on("list plate", function (data) {
     }
 });
 
-socket.on("list ingredient", function (data) {
+socket.on("list ingredient", data => {
     let child = ingredient.lastElementChild;
     while (child) {
         ingredient.removeChild(child);
@@ -217,7 +219,7 @@ socket.on("list ingredient", function (data) {
     }
 });
 
-socket.on("list sauce", function (data) {
+socket.on("list sauce", data => {
     let child = sauce.lastElementChild;
     while (child) {
         sauce.removeChild(child);
@@ -228,7 +230,7 @@ socket.on("list sauce", function (data) {
     }
 });
 
-socket.on("list drink", function (data) {
+socket.on("list drink", data => {
     let child = drink.lastElementChild;
     while (child) {
         drink.removeChild(child);
@@ -239,7 +241,7 @@ socket.on("list drink", function (data) {
     }
 });
 
-socket.on("list dessert", function (data) {
+socket.on("list dessert", data => {
     let child = dessert.lastElementChild;
     while (child) {
         dessert.removeChild(child);
@@ -250,27 +252,27 @@ socket.on("list dessert", function (data) {
     }
 });
 
-socket.on("new command", function (data) {
+socket.on("new command", data => {
     addcmd(data.id, data.plate, data.content, data.sauce, data.drink, data.dessert, data.state);
 });
 
-socket.on("cleared command", function (data) {
-    clear(document.querySelector(`.liste #cmd${data.id}`));
+socket.on("cleared command", data => {
+    clear(document.querySelector(`.liste #cmd${data.id}`))
 });
 
-socket.on("finish command", function (data) {
-    done(document.querySelector(`.liste #cmd${data.id}`));
+socket.on("finish command", data => {
+    done(document.querySelector(`.liste #cmd${data.id}`))
 });
 
-socket.on("gave command", function (data) {
-    give(document.querySelector(`.liste #cmd${data.id}`));
+socket.on("gave command", data => {
+    give(document.querySelector(`.liste #cmd${data.id}`))
 });
 
-socket.on("glitched command", function (data) {
-    error(document.querySelector(`.liste #cmd${data.id}`));
+socket.on("glitched command", data => {
+    error(document.querySelector(`.liste #cmd${data.id}`))
 });
 
-document.querySelector('.validation').addEventListener('click', ev => {
+document.querySelector(".validation").addEventListener("click", ev => {
     ev.stopPropagation();
     current["pc"] = 1;
     current["sandwitch"] = 1;
