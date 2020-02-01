@@ -241,8 +241,11 @@ socket.on("glitched command", data => {
 
 document.querySelector(".validation").addEventListener("click", ev => {
     ev.stopPropagation();
+    if (!current.plate && !current.ingredient.length && !current.sauce.length && !current.drink && !current.dessert) {
+        alert("Empty command !");
+        return;
+    }
     current["client"] = 1;
-
     socket.emit("add command", current);
     current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null};
     document.querySelectorAll("input[name=plate],input[name=drink],input[name=dessert]").forEach( e => {
