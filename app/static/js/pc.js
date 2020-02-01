@@ -12,6 +12,9 @@ function addcmd(id, plate, content, sauce, drink, dessert, state) {
         e.classList.toggle("show-spec");
     });
     switch (state) {
+        case "done":
+            done(e);
+            break;
         case "gave":
             give(e);
             break;
@@ -23,10 +26,16 @@ function addcmd(id, plate, content, sauce, drink, dessert, state) {
 }
 
 function clear(e) {
+    e.classList.remove('finis');
     e.classList.remove('donnee');
     e.classList.remove('probleme');
     e.classList.remove('show-spec');
     list.prepend(e);
+}
+
+function done(e) {
+    e.classList.remove('show-spec');
+    e.classList.add('finis');
 }
 
 function give(e) {
@@ -78,6 +87,10 @@ socket.on("new command", function (data) {
 
 socket.on("cleared command", function (data) {
     clear(document.querySelector(`.liste #cmd${data.id}`));
+});
+
+socket.on("finish command", function (data) {
+    done(document.querySelector(`.liste #cmd${data.id}`));
 });
 
 socket.on("gave command", function (data) {
@@ -189,6 +202,10 @@ document.querySelectorAll("input[name=dessert]").forEach( function (e) {
 
 document.querySelector('.validation').addEventListener('click', ev => {
     ev.stopPropagation();
+    current["pc"] = 1;
+    current["sandwitch"] = 1;
+    current["client"] = 1;
+
     socket.emit("add command", current);
     current = {"plate": null, "content": [], "sauce": [], "drink": null, "dessert": null};
     document.querySelectorAll("input").forEach( e => {
