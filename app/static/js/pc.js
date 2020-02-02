@@ -279,7 +279,6 @@ function hinter(ev) {
 }
 
 socket.on("list users", data => {
-    console.log(data);
     let user_list = document.getElementById("user_list");
     user_list.innerHTML = "";
     for (let u of data["list"]) {
