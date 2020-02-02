@@ -520,6 +520,10 @@ textarea.input2 + .focus-input2::after {
   display: none;
 }
 
+.liste .WIP {
+  background-color: rgb(70, 170, 185);
+}
+
 .liste .finis {
   background-color: rgb(185, 176, 30);
 }

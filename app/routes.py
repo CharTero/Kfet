@@ -53,3 +53,9 @@ def stocks():
 @login_required
 def menu():
     return render_template("menu.html")
+
+
+@app.route("/cuisine")
+@login_required
+def cuisine():
+    return render_template("cuisine.html")

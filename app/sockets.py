@@ -5,7 +5,7 @@ from flask_login import current_user
 from flask_socketio import emit, disconnect
 
 from app import socketio, db
-from app.models import User, Command, Plate, Ingredient, Sauce, Drink, Dessert
+from app.models import User, Command, Plate, Ingredient, Sauce, Drink, Dessert, Service
 
 
 def authenticated_only(f):
@@ -22,18 +22,26 @@ def authenticated_only(f):
 def command_json(c):
     ingredient = " - ".join([s.id for s in c.content])
     sauces = " - ".join([s.id for s in c.sauce])
+    sandwitch = None
     if c.error:
         state = "error"
     elif c.give:
         state = "gave"
     elif c.done:
         state = "done"
+    elif c.WIP:
+        state = "WIP"
     elif c.take:
         state = "waiting"
     else:
         state = "unknown"
+    if c.sandwitch_id:
+        try:
+            sandwitch = User.query.get(c.sandwitch_id).username
+        except AttributeError:
+            pass
     return {"id": c.number, "plate": c.plate_id, "ingredient": ingredient, "sauce": sauces, "drink": c.drink_id,
-            "dessert": c.dessert_id, "state": state}
+            "dessert": c.dessert_id, "state": state, "sandwitch": sandwitch}
 
 
 @socketio.on("connect")
@@ -110,6 +118,12 @@ def rmcmd(json):
         c.done = None
         c.give = None
         c.error = False
+        service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
+        if c.WIP and service:
+            sandwitchs = [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]
+            if c.sandwitch_id in sandwitchs:
+                setattr(service, f"sandwitch{sandwitchs.index(c.sandwitch_id)+1}", False)
+            c.WIP = False
         db.session.commit()
         emit("cleared command", {"id": json["id"]}, broadcast=True)
 
@@ -120,6 +134,12 @@ def donecmd(json):
     c = Command.query.get(json["id"])
     if c:
         c.done = datetime.datetime.now().time()
+        service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
+        if service and c.WIP:
+            sandwitchs = [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]
+            if c.sandwitch_id in sandwitchs:
+                setattr(service, f"sandwitch{sandwitchs.index(c.sandwitch_id)+1}", False)
+        c.WIP = False
         db.session.commit()
         emit("finish command", {"id": json["id"]}, broadcast=True)
 
@@ -132,6 +152,26 @@ def givecmd(json):
         c.give = datetime.datetime.now().time()
         db.session.commit()
         emit("gave command", {"id": json["id"]}, broadcast=True)
+
+
+@socketio.on("WIP command")
+@authenticated_only
+def wipcmd(json):
+    c = Command.query.get(json["id"])
+    if c:
+        c.WIP = True
+        service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
+        sandwitch = None
+        if service:
+            sandwitchs = [service.sandwitch1, service.sandwitch2, service.sandwitch3]
+            for i, s in enumerate(sandwitchs):
+                if not s:
+                    setattr(service, f"sandwitch{i+1}", True)
+                    c.sandwitch_id = getattr(service, f"sandwitch{i+1}_id")
+                    sandwitch = User.query.get(c.sandwitch_id).username
+                    break
+        db.session.commit()
+        emit("WIPed command", {"id": json["id"], "sandwitch": sandwitch}, broadcast=True)
 
 
 @socketio.on("error command")
@@ -198,3 +238,18 @@ def lsusers(json):
         if not json or "user" not in json or json["user"] in u.username:
             users_list.append(u.username)
     emit("list users", {"list": users_list})
+
+
+@socketio.on("list service")
+@authenticated_only
+def lsservice():
+    service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
+    s = []
+    if service:
+        for u in [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]:
+            try:
+                s.append([u, User.query.get(u).username])
+            except AttributeError:
+                s.append([])
+
+    emit("list service", {"list": s})

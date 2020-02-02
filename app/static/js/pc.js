@@ -9,8 +9,8 @@ let current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "des
 let radios = {"plate": null, "drink": null, "dessert": null};
 
 
-function addcmd(id, plate, ingredient, sauce, drink, dessert, state) {
-    list.insertAdjacentHTML("beforeend", `<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
+function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwitch) {
+    list.insertAdjacentHTML("beforeend", `<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <h2></h2><p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
     let e = document.querySelector(`.liste #cmd${id}`);
     e.addEventListener( "click" ,ev => {
         ev.stopPropagation();
@@ -29,6 +29,9 @@ function addcmd(id, plate, ingredient, sauce, drink, dessert, state) {
         socket.emit("error command", {"id": id});
     });
     switch (state) {
+        case "WIP":
+            WIP(e, sandwitch);
+            break;
         case "done":
             done(e);
             break;
@@ -121,8 +124,15 @@ function clear(e) {
     e.classList.remove("finis");
     e.classList.remove("donnee");
     e.classList.remove("probleme");
+    e.classList.remove("WIP");
     e.classList.remove("show-spec");
     list.prepend(e);
+}
+
+function WIP(e, name) {
+    e.classList.remove("show-spec");
+    e.classList.add("WIP");
+    e.querySelector("h2").innerHTML = name;
 }
 
 function done(e) {
@@ -225,6 +235,10 @@ socket.on("new command", data => {
 
 socket.on("cleared command", data => {
     clear(document.querySelector(`.liste #cmd${data.id}`))
+});
+
+socket.on("WIPed command", data => {
+    WIP(document.querySelector(`.liste #cmd${data.id}`), data.sandwitch)
 });
 
 socket.on("finish command", data => {

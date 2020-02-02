@@ -46,6 +46,7 @@ class Command(db.Model):
     take = db.Column(db.Time, default=datetime.datetime.now().time)
     done = db.Column(db.Time)
     give = db.Column(db.Time)
+    WIP = db.Column(db.Boolean, default=False)
     error = db.Column(db.Boolean, default=False)
 
     plate_id = db.Column(db.String, db.ForeignKey("plate.id"))
@@ -122,3 +123,14 @@ class Dessert(db.Model):
 
     def __repr__(self):
         return f"<Dessert {self.id}>"
+
+
+class Service(db.Model):
+    sandwitch1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    sandwitch2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    sandwitch3_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    date = db.Column(db.Date, default=datetime.datetime.now().date, primary_key=True, unique=True)
+
+    sandwitch1 = db.Column(db.Boolean, default=False)
+    sandwitch2 = db.Column(db.Boolean, default=False)
+    sandwitch3 = db.Column(db.Boolean, default=False)
