@@ -59,3 +59,9 @@ def menu():
 @login_required
 def cuisine():
     return render_template("cuisine.html")
+
+
+@app.route("/service")
+@login_required
+def service():
+    return render_template("equipe.html")
