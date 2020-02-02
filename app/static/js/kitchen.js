@@ -5,7 +5,9 @@ let done = document.getElementById("realisee");
 let waiting = document.getElementById("attente");
 
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwitch) {
-    done.insertAdjacentHTML("beforeend", `<div id=cmd${id}> <h1>${id}</h1><h2></h2><p>${plate} | ${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p> </div>`);
+    if (!sandwitch)
+        sandwitch = "";
+    done.insertAdjacentHTML("beforeend", `<div id=cmd${id}> <h1>${id}</h1><h2>${sandwitch}</h2><p>${plate} | ${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p> </div>`);
     let e = document.getElementById(`cmd${id}`);
     switch (state) {
         case "WIP":
@@ -71,7 +73,7 @@ socket.on("list command", data => {
 });
 
 socket.on("list service", data => {
-    service = data["list"]
+    service = data["list"];
     if (service.length === 0)
         alert("No service set !");
     else
@@ -79,7 +81,7 @@ socket.on("list service", data => {
 });
 
 socket.on("new command", data => {
-    addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state);
+    addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state, data.sandwitch);
     waiter();
 });
 

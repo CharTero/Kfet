@@ -10,7 +10,9 @@ let radios = {"plate": null, "drink": null, "dessert": null};
 
 
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwitch) {
-    list.insertAdjacentHTML("beforeend", `<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <h2></h2><p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
+    if (!sandwitch)
+        sandwitch = "";
+    list.insertAdjacentHTML("beforeend", `<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <h2>${sandwitch}</h2><p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
     let e = document.querySelector(`.liste #cmd${id}`);
     e.addEventListener( "click" ,ev => {
         ev.stopPropagation();
@@ -230,7 +232,7 @@ socket.on("list dessert", data => {
 });
 
 socket.on("new command", data => {
-    addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state);
+    addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state, data.sandwitch);
 });
 
 socket.on("cleared command", data => {

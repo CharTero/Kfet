@@ -521,6 +521,13 @@ textarea.input2 + .focus-input2::after {
   display: none;
 }
 
+.liste .WIP {
+  background-color: rgb(70, 170, 185);
+}
+
+.liste .finis {
+  background-color: rgb(185, 176, 30);
+}
 
 .liste .donnee {
   background-color: rgb(0, 105, 0);
