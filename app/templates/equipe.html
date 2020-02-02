@@ -3,7 +3,7 @@
 {% block content %}
     <nav>
 		<ul>
-			<a id="gobackpc" href="pc.html"><li>Retour au PC</li></a>
+			<a id="gobackpc" href="{{ url_for('pc') }}"><li>Retour au PC</li></a>
 		</ul>
 	</nav>
     <div class="bg-contact2" id="main-container" style="background-image: url({{ url_for('static',filename='images/bg-01.jpg') }});">
@@ -11,30 +11,31 @@
 			<div id="equipes">
 				<div id="equipePC">
                     <label for="pc">PC :</label>
-                    <input type="text" id="pc">
+                    <input list="user_list" type="text" id="pc">
                 </div>
                 <div id="sandwich">
                     <label for="sandwich1">Sandiwch 1 :</label>
-                    <input type="text" id="sandwich1">
+                    <input list="user_list" type="text" id="sandwich1">
 
                     <label for="sandwich2">Sandwich 2 :</label>
-                    <input type="text" id="sandwich2">
+                    <input list="user_list" type="text" id="sandwich2">
 
                     <label for="sandwich3">Sandwich 3 :</label>
-                    <input type="text" id="sandwich3">
+                    <input list="user_list" type="text" id="sandwich3">
                 </div>
                 <div id="commis">
-                    <label for="commis1">Commis 1 :</label>
-                    <input type="text" id="commis1">
+                    <label for="commi1">Commis 1 :</label>
+                    <input list="user_list" type="text" id="commi1">
 
-                    <label for="commis2">Commis 2 :</label>
-                    <input type="text" id="commis2">
+                    <label for="commi2">Commis 2 :</label>
+                    <input list="user_list" type="text" id="commi2">
                 </div>
             </div>
             <div id="okequipe">
                 <button class="contact2-form-btn">Valider</button>
             </div>
-			
+            <datalist id="user_list">
+            </datalist>
         </form>
     </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>

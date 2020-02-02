@@ -1,5 +1,4 @@
 let socket = io();
-let service = [];
 let WIP = document.getElementById("encours");
 let done = document.getElementById("realisee");
 let waiting = document.getElementById("attente");
@@ -73,8 +72,7 @@ socket.on("list command", data => {
 });
 
 socket.on("list service", data => {
-    service = data["list"];
-    if (service.length === 0)
+    if (Object.keys(data).length === 0)
         alert("No service set !");
     else
         socket.emit("list command");
