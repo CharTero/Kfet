@@ -17,7 +17,7 @@ class User(UserMixin, db.Model):
 
     command = db.relationship("Command", backref="client", lazy="dynamic", foreign_keys="Command.client_id")
     pc_command = db.relationship("Command", backref="pc", lazy="dynamic", foreign_keys="Command.pc_id")
-    sandwitch_command = db.relationship("Command", backref="sandwitch", lazy="dynamic", foreign_keys="Command.sandwitch_id")
+    sandwich_command = db.relationship("Command", backref="sandwich", lazy="dynamic", foreign_keys="Command.sandwich_id")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -39,7 +39,7 @@ class Command(db.Model):
     number = db.Column(db.Integer, nullable=False)
 
     pc_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    sandwitch_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    sandwich_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     client_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     date = db.Column(db.Date, default=datetime.datetime.now().date)
@@ -127,13 +127,13 @@ class Dessert(db.Model):
 
 class Service(db.Model):
     pc_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    sandwitch1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    sandwitch2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    sandwitch3_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    sandwich1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    sandwich2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    sandwich3_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     commi1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     commi2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     date = db.Column(db.Date, default=datetime.datetime.now().date, primary_key=True, unique=True)
 
-    sandwitch1 = db.Column(db.Boolean, default=False)
-    sandwitch2 = db.Column(db.Boolean, default=False)
-    sandwitch3 = db.Column(db.Boolean, default=False)
+    sandwich1 = db.Column(db.Boolean, default=False)
+    sandwich2 = db.Column(db.Boolean, default=False)
+    sandwich3 = db.Column(db.Boolean, default=False)

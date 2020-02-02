@@ -22,7 +22,7 @@ def authenticated_only(f):
 def command_json(c):
     ingredient = " - ".join([s.id for s in c.content])
     sauces = " - ".join([s.id for s in c.sauce])
-    sandwitch = None
+    sandwich = None
     if c.error:
         state = "error"
     elif c.give:
@@ -35,13 +35,13 @@ def command_json(c):
         state = "waiting"
     else:
         state = "unknown"
-    if c.sandwitch_id:
+    if c.sandwich_id:
         try:
-            sandwitch = User.query.get(c.sandwitch_id).username
+            sandwich = User.query.get(c.sandwich_id).username
         except AttributeError:
             pass
     return {"id": c.number, "plate": c.plate_id, "ingredient": ingredient, "sauce": sauces, "drink": c.drink_id,
-            "dessert": c.dessert_id, "state": state, "sandwitch": sandwitch}
+            "dessert": c.dessert_id, "state": state, "sandwich": sandwich}
 
 
 @socketio.on("connect")
@@ -120,9 +120,9 @@ def rmcmd(json):
         c.error = False
         service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
         if c.WIP and service:
-            sandwitchs = [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]
-            if c.sandwitch_id in sandwitchs:
-                setattr(service, f"sandwitch{sandwitchs.index(c.sandwitch_id)+1}", False)
+            sandwichs = [service.sandwich1_id, service.sandwich2_id, service.sandwich3_id]
+            if c.sandwich_id in sandwichs:
+                setattr(service, f"sandwich{sandwichs.index(c.sandwich_id)+1}", False)
             c.WIP = False
         db.session.commit()
         emit("cleared command", {"id": json["id"]}, broadcast=True)
@@ -136,9 +136,9 @@ def donecmd(json):
         c.done = datetime.datetime.now().time()
         service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
         if service and c.WIP:
-            sandwitchs = [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]
-            if c.sandwitch_id in sandwitchs:
-                setattr(service, f"sandwitch{sandwitchs.index(c.sandwitch_id)+1}", False)
+            sandwichs = [service.sandwich1_id, service.sandwich2_id, service.sandwich3_id]
+            if c.sandwich_id in sandwichs:
+                setattr(service, f"sandwich{sandwichs.index(c.sandwich_id)+1}", False)
         c.WIP = False
         db.session.commit()
         emit("finish command", {"id": json["id"]}, broadcast=True)
@@ -152,9 +152,9 @@ def givecmd(json):
         c.give = datetime.datetime.now().time()
         service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
         if service and c.WIP:
-            sandwitchs = [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]
-            if c.sandwitch_id in sandwitchs:
-                setattr(service, f"sandwitch{sandwitchs.index(c.sandwitch_id)+1}", False)
+            sandwichs = [service.sandwich1_id, service.sandwich2_id, service.sandwich3_id]
+            if c.sandwich_id in sandwichs:
+                setattr(service, f"sandwich{sandwichs.index(c.sandwich_id)+1}", False)
         c.WIP = False
         db.session.commit()
         emit("gave command", {"id": json["id"]}, broadcast=True)
@@ -167,17 +167,17 @@ def wipcmd(json):
     if c:
         c.WIP = True
         service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
-        sandwitch = None
+        sandwich = None
         if service:
-            sandwitchs = [service.sandwitch1, service.sandwitch2, service.sandwitch3]
-            for i, s in enumerate(sandwitchs):
+            sandwichs = [service.sandwich1, service.sandwich2, service.sandwich3]
+            for i, s in enumerate(sandwichs):
                 if not s:
-                    setattr(service, f"sandwitch{i+1}", True)
-                    c.sandwitch_id = getattr(service, f"sandwitch{i+1}_id")
-                    sandwitch = User.query.get(c.sandwitch_id).username
+                    setattr(service, f"sandwich{i+1}", True)
+                    c.sandwich_id = getattr(service, f"sandwich{i+1}_id")
+                    sandwich = User.query.get(c.sandwich_id).username
                     break
         db.session.commit()
-        emit("WIPed command", {"id": json["id"], "sandwitch": sandwitch}, broadcast=True)
+        emit("WIPed command", {"id": json["id"], "sandwich": sandwich}, broadcast=True)
 
 
 @socketio.on("error command")
@@ -252,7 +252,7 @@ def lsservice():
     service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
     s = []
     if service:
-        for u in [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]:
+        for u in [service.sandwich1_id, service.sandwich2_id, service.sandwich3_id]:
             try:
                 s.append([u, User.query.get(u).username])
             except AttributeError:
