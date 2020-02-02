@@ -170,7 +170,7 @@ socket.on("list command", data => {
         child = list.lastElementChild;
     }
     for (let c of data.list) {
-        addcmd(c.id, c.plate, c.ingredient, c.sauce, c.drink, c.dessert, c.state);
+        addcmd(c.id, c.plate, c.ingredient, c.sauce, c.drink, c.dessert, c.state, c.sandwitch);
     }
 });
 

@@ -7,27 +7,6 @@ let waiting = document.getElementById("attente");
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwitch) {
     done.insertAdjacentHTML("beforeend", `<div id=cmd${id}> <h1>${id}</h1><h2></h2><p>${plate} | ${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p> </div>`);
     let e = document.getElementById(`cmd${id}`);
-    e.addEventListener('keyup', ev => {
-        if(!['1', '2', '3'].includes(ev.key)) return;
-
-        let nth=+ev.key;
-        let elem=WIP.querySelector(`.commis${nth}`);
-        let next=waiting.querySelector('div');
-
-        if(!next) {
-
-            elem.classList.add('realisee');
-            done.appendChild(elem);
-
-        } else {
-            next.classList.add(`commis${nth}`);
-            WIP.replaceChild(next, elem);
-
-            next.classList.add('realisee');
-            done.prepend(elem);
-            elem.classList.remove(`commis${nth}`);
-        }
-    });
     switch (state) {
         case "WIP":
             WIPed(e, sandwitch);
@@ -39,13 +18,12 @@ function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwitch) 
 }
 
 function WIPed(e, name) {
-    for (let s of service) {
-        if (s[1] === name) {
-            e.querySelector("h2").innerHTML = name;
-            break;
-        }
-    }
+    e.querySelector("h2").innerHTML = name;
     WIP.insertAdjacentHTML("afterbegin", e.outerHTML);
+    WIP.querySelector(`#${e.id}`).addEventListener("click", ev => {
+        socket.emit("done command", {"id": parseInt(e.id.replace("cmd", ""))});
+        console.log("test");
+    });
     e.remove();
 }
 
@@ -59,10 +37,22 @@ function wait(e) {
     e.remove();
 }
 
+function waiter() {
+    if (WIP.children.length < 3) {
+        let i, list;
+        if (waiting.children.length < 3 - WIP.children.length)
+            i = waiting.children.length;
+        else
+            i = 3 - WIP.children.length;
+        for (i-=1; i >= 0; i--) {
+            socket.emit("WIP command", {"id": waiting.children[i].querySelector("h1").innerHTML})
+        }
+    }
+}
+
 socket.on("connect", data => {
     if (data === "ok") {
         socket.emit("list service");
-        socket.emit("list command");
     }
 });
 
@@ -77,38 +67,43 @@ socket.on("list command", data => {
     for (let c of data.list) {
         addcmd(c.id, c.plate, c.ingredient, c.sauce, c.drink, c.dessert, c.state, c.sandwitch);
     }
-    if (!WIP.children.length) {
-        waiting.children[0].innerHTML
-        //TODO: Auto WIP command
-    }
+    waiter();
 });
 
 socket.on("list service", data => {
     service = data["list"]
     if (service.length === 0)
         alert("No service set !");
+    else
+        socket.emit("list command");
 });
 
 socket.on("new command", data => {
     addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state);
+    waiter();
 });
 
 socket.on("cleared command", data => {
-    wait(document.getElementById((`cmd${data.id}`)))
+    wait(document.getElementById((`cmd${data.id}`)));
+    waiter();
 });
 
 socket.on("WIPed command", data => {
-    WIPed(document.getElementById((`cmd${data.id}`)), data.sandwitch)
+    WIPed(document.getElementById((`cmd${data.id}`)), data.sandwitch);
+    waiter();
 });
 
 socket.on("finish command", data => {
-    finish(document.getElementById((`cmd${data.id}`)))
+    finish(document.getElementById((`cmd${data.id}`)));
+    waiter();
 });
 
 socket.on("gave command", data => {
-    finish(document.getElementById((`cmd${data.id}`)))
+    finish(document.getElementById((`cmd${data.id}`)));
+    waiter();
 });
 
 socket.on("glitched command", data => {
-    finish(document.getElementById(`cmd${data.id}`))
+    finish(document.getElementById(`cmd${data.id}`));
+    waiter();
 });

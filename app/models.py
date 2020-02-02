@@ -126,9 +126,12 @@ class Dessert(db.Model):
 
 
 class Service(db.Model):
+    pc_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     sandwitch1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     sandwitch2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     sandwitch3_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    commi1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    commi2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     date = db.Column(db.Date, default=datetime.datetime.now().date, primary_key=True, unique=True)
 
     sandwitch1 = db.Column(db.Boolean, default=False)

@@ -113,7 +113,7 @@ def addcmd(json):
 @socketio.on("clear command")
 @authenticated_only
 def rmcmd(json):
-    c = Command.query.get(json["id"])
+    c = Command.query.filter_by(date=datetime.datetime.now().date(), number=json["id"]).first()
     if c:
         c.done = None
         c.give = None
@@ -131,7 +131,7 @@ def rmcmd(json):
 @socketio.on("done command")
 @authenticated_only
 def donecmd(json):
-    c = Command.query.get(json["id"])
+    c = Command.query.filter_by(date=datetime.datetime.now().date(), number=json["id"]).first()
     if c:
         c.done = datetime.datetime.now().time()
         service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
@@ -147,9 +147,15 @@ def donecmd(json):
 @socketio.on("give command")
 @authenticated_only
 def givecmd(json):
-    c = Command.query.get(json["id"])
+    c = Command.query.filter_by(date=datetime.datetime.now().date(), number=json["id"]).first()
     if c:
         c.give = datetime.datetime.now().time()
+        service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
+        if service and c.WIP:
+            sandwitchs = [service.sandwitch1_id, service.sandwitch2_id, service.sandwitch3_id]
+            if c.sandwitch_id in sandwitchs:
+                setattr(service, f"sandwitch{sandwitchs.index(c.sandwitch_id)+1}", False)
+        c.WIP = False
         db.session.commit()
         emit("gave command", {"id": json["id"]}, broadcast=True)
 
@@ -157,7 +163,7 @@ def givecmd(json):
 @socketio.on("WIP command")
 @authenticated_only
 def wipcmd(json):
-    c = Command.query.get(json["id"])
+    c = Command.query.filter_by(date=datetime.datetime.now().date(), number=json["id"]).first()
     if c:
         c.WIP = True
         service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
@@ -177,7 +183,7 @@ def wipcmd(json):
 @socketio.on("error command")
 @authenticated_only
 def errcmd(json):
-    c = Command.query.get(json["id"])
+    c = Command.query.filter_by(date=datetime.datetime.now().date(), number=json["id"]).first()
     if c:
         c.error = True
         db.session.commit()
