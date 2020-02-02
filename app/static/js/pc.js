@@ -10,7 +10,7 @@ let radios = {"plate": null, "drink": null, "dessert": null};
 
 
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state) {
-    $(list).append(`<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
+    list.insertAdjacentHTML("beforeend", `<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
     let e = document.querySelector(`.liste #cmd${id}`);
     e.addEventListener( "click" ,ev => {
         ev.stopPropagation();
@@ -43,7 +43,7 @@ function addcmd(id, plate, ingredient, sauce, drink, dessert, state) {
 }
 
 function addplate(id, name) {
-    $(plate).append(`<li><input type="radio" name="plate" id="${id}"><label for="${id}">${name}</label></li>`);
+    plate.insertAdjacentHTML("beforeend", `<li><input type="radio" name="plate" id="${id}"><label for="${id}">${name}</label></li>`);
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         radiocheck(e,  "plate",0);
@@ -56,7 +56,7 @@ function addplate(id, name) {
 }
 
 function addingredient(id, name) {
-    $(ingredient).append(`<li><input type="checkbox" disabled=true name="ingredient" id="${id}"><label for="${id}">${name}</label></li>`);
+    ingredient.insertAdjacentHTML("beforeend", `<li><input type="checkbox" disabled=true name="ingredient" id="${id}"><label for="${id}">${name}</label></li>`);
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         checkcheck(e, "ingredient", 1, 3)
@@ -64,7 +64,7 @@ function addingredient(id, name) {
 }
 
 function addsauce(id, name) {
-    $(sauce).append(`<li><input type="checkbox" disabled=true name="sauce" id="${id}"><label for="${id}">${name}</label></li>`);
+    sauce.insertAdjacentHTML("beforeend", `<li><input type="checkbox" disabled=true name="sauce" id="${id}"><label for="${id}">${name}</label></li>`);
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         checkcheck(e, "sauce", 2, 2)
@@ -72,7 +72,7 @@ function addsauce(id, name) {
 }
 
 function adddrink(id, name) {
-    $(drink).append(`<li><input type="radio" name="drink" id="${id}"><label for="${id}">${name}</label></li>`);
+    drink.insertAdjacentHTML("beforeend", `<li><input type="radio" name="drink" id="${id}"><label for="${id}">${name}</label></li>`);
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         radiocheck(e, "drink", 3)
@@ -80,7 +80,7 @@ function adddrink(id, name) {
 }
 
 function adddessert(id, name) {
-    $(dessert).append(`<li><input type="radio" name="dessert" id="${id}"><label for="${id}">${name}</label></li>`);
+    dessert.insertAdjacentHTML("beforeend", `<li><input type="radio" name="dessert" id="${id}"><label for="${id}">${name}</label></li>`);
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         radiocheck(e, "dessert", 4)
@@ -241,11 +241,16 @@ socket.on("glitched command", data => {
 
 document.querySelector(".validation").addEventListener("click", ev => {
     ev.stopPropagation();
+    let user = document.getElementById("user");
     if (!current.plate && !current.ingredient.length && !current.sauce.length && !current.drink && !current.dessert) {
         alert("Empty command !");
         return;
+    } else if (user.style.color === "red") {
+        current["firstname"] = prompt("Prénom");
+        current["lastname"] = prompt("Nom");
     }
-    current["client"] = 1;
+
+    current["client"] = user.value;
     socket.emit("add command", current);
     current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null};
     document.querySelectorAll("input[name=plate],input[name=drink],input[name=dessert]").forEach( e => {
@@ -258,4 +263,33 @@ document.querySelector(".validation").addEventListener("click", ev => {
     document.querySelectorAll("#resume p").forEach( e => {
         e.innerHTML = ""
     });
+    user.value = "";
+    user.style.color = "";
+    document.getElementById("user_list").innerHTML = "";
+});
+
+document.getElementById("user").addEventListener("keyup", ev => {hinter(ev)});
+
+function hinter(ev) {
+    let input = ev.target;
+    let min_characters = 0;
+    if (input.value.length < min_characters)
+        return;
+    socket.emit("list users", {"user": input.value});
+}
+
+socket.on("list users", data => {
+    console.log(data);
+    let user_list = document.getElementById("user_list");
+    user_list.innerHTML = "";
+    for (let u of data["list"]) {
+        user_list.insertAdjacentHTML("beforeend", `<option value="${u}">`);
+    }
+
+    let user = document.getElementById("user");
+    if (data["list"].indexOf(user.value) === -1)
+        user.style.color = "red";
+    else {
+        user.style.color = "";
+    }
 });

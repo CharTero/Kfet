@@ -15,6 +15,7 @@ def authenticated_only(f):
             disconnect()
         else:
             return f(*args, **kwargs)
+
     return wrapped
 
 
@@ -31,7 +32,8 @@ def command_json(c):
         state = "waiting"
     else:
         state = "unknown"
-    return {"id": c.number, "plate": c.plate_id, "ingredient": ingredient, "sauce": sauces, "drink": c.drink_id, "dessert": c.dessert_id, "state": state}
+    return {"id": c.number, "plate": c.plate_id, "ingredient": ingredient, "sauce": sauces, "drink": c.drink_id,
+            "dessert": c.dessert_id, "state": state}
 
 
 @socketio.on("connect")
@@ -56,15 +58,18 @@ def lscmd():
 def addcmd(json):
     c = Command()
     try:
-        c.number = Command.query.filter_by(date=datetime.datetime.now().date()).order_by(Command.number.desc()).first().number+1
+        c.number = Command.query.filter_by(date=datetime.datetime.now().date()).order_by(
+            Command.number.desc()).first().number + 1
     except AttributeError:
         c.number = 1
     c.pc_id = current_user.id
+    if all(i in json and json[i] for i in ["firstname", "lastname", "client"]):
+        db.session.add(User(username=json["client"], firstname=json["firstname"], lastname=json["lastname"]))
     if "client" in json:
         try:
-            c.client_id = User.query.get(json["client"]).id
+            c.client_id = User.query.filter_by(username=json["client"]).first().id
         except AttributeError:
-            c.client_id = 0
+            c.client_id = User.query.filter_by(username="dummy").first().id
     if "plate" in json:
         try:
             c.plate_id = Plate.query.get(json["plate"]).id
@@ -182,3 +187,14 @@ def lsdessert():
     for p in Dessert.query.all():
         desserts.append({"id": p.id, "name": p.name})
     emit("list dessert", {"list": desserts})
+
+
+@socketio.on("list users")
+@authenticated_only
+def lsusers(json):
+    users = User.query.all()
+    users_list = []
+    for u in users:
+        if not json or "user" not in json or json["user"] in u.username:
+            users_list.append(u.username)
+    emit("list users", {"list": users_list})
