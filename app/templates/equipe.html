@@ -3,7 +3,7 @@
 {% block content %}
     <nav>
 		<ul>
-			<a id="gobackpc" href="{{ url_for('pc') }}"><li>Retour au PC</li></a>
+			<a id="gobackpc" onclick="window.close()"><li>Retour au PC</li></a>
 		</ul>
 	</nav>
     <div class="bg-contact2" id="main-container" style="background-image: url({{ url_for('static',filename='images/bg-01.jpg') }});">
