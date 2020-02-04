@@ -599,11 +599,6 @@ div#fct{
 div#middle-container{
   display: flex;
   flex-wrap: wrap;
-  background: rgba(219,21,99,0.8);
-  background: -webkit-linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
-  background: -o-linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
-  background: -moz-linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
-  background: linear-gradient(45deg, rgba(213,0,125,0.8), rgba(229,57,53,0.8));
   min-height: 100vh;
   width: 100%;
 }
@@ -669,43 +664,52 @@ audio{
 
 #encours{
   display: flex;
-  background-color: rgba(139, 91, 1, 0.87);
-  flex-wrap : nowrap;
+  flex-wrap : wrap;
   flex-direction: row;
   width: 100%;
   justify-content: space-around;
 }
 
 #encours div{
-  background-color: rgb(192, 112, 7);
+  background-color: rgb(39, 39, 39);
   padding: 1vw;
   margin-top: 5vh;
-  height: 25vh;
   border-radius: 0.5vw;
+  border: 0.4vw solid rgb(245, 144, 11);
+}
+
+#encours h1{
+  color: rgb(245, 144, 11);
 }
 
 #attente{
   display: flex;
-  background-color: rgba(110, 1, 1, 0.466);
   flex-wrap: wrap;
   justify-content: space-around;
   width: 100%;
 }
 
 #attente div{
-  background-color: rgb(190, 101, 101);
   padding: 1vw;
   margin-top: 2vh;
   border-radius: 0.5vw;
-  height: 17vh;
+  border: 0.4vw solid rgb(190, 101, 101);
+  background-color: rgb(39, 39, 39);
+}
+
+#attente h1{
+  color: rgb(190, 101, 101);
 }
 
 .finie{
   display: none;
 }
 
+#middle-container p{
+  font-size: 20px;
+}
+
 #realisee{
-  background-color: rgba(3, 102, 3, 0.849);
   display: flex;
   flex-wrap: wrap;
   flex-direction: row-reverse;
@@ -714,11 +718,15 @@ audio{
 }
 
 #realisee div{
-  background-color: rgb(86, 158, 75);
-  padding: 1vw;
+  border: 0.4vw solid rgb(122, 233, 105);
+  background-color: rgb(39, 39, 39);
+  padding: 1vw; 
   margin-top: 2vh;
   border-radius: 0.5vw;
-  height: 17vh;
+}
+
+#realisee h1{
+  color: rgb(122, 233, 105);
 }
 
 #attente div :nth-child(2), #attente div :nth-child(3) {

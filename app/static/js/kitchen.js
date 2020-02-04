@@ -23,7 +23,6 @@ function WIPed(e, name) {
     WIP.insertAdjacentHTML("afterbegin", e.outerHTML);
     WIP.querySelector(`#${e.id}`).addEventListener("click", ev => {
         socket.emit("done command", {"id": parseInt(e.id.replace("cmd", ""))});
-        console.log("test");
     });
     e.remove();
 }
