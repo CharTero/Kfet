@@ -20,7 +20,17 @@ function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwich) {
 
 function WIPed(e, name) {
     e.querySelector("h2").innerHTML = name;
-    WIP.insertAdjacentHTML("afterbegin", e.outerHTML);
+    let names = [name];
+    WIP.querySelectorAll("h2").forEach(e => {
+        names.push(e.innerHTML)
+    });
+    names.sort();
+    if (names.indexOf(name) === 0)
+        WIP.insertAdjacentHTML("afterbegin", e.outerHTML);
+    else {
+        WIP.children[names.indexOf(name)-1].insertAdjacentHTML("afterend", e.outerHTML);
+    }
+
     WIP.querySelector(`#${e.id}`).addEventListener("click", ev => {
         socket.emit("done command", {"id": parseInt(e.id.replace("cmd", ""))});
     });
