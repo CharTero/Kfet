@@ -5,8 +5,9 @@ let sauce = document.querySelector("#sauce ul");
 let drink = document.querySelector("#boisson ul");
 let dessert = document.querySelector("#dessert ul");
 let list = document.querySelector(".liste");
-let current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null};
+let current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null, "price": {}};
 let radios = {"plate": null, "drink": null, "dessert": null};
+let db = {"plate": {}, "ingredient": {}, "sauce": {}, "drink": {}, "dessert": {}};
 
 
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state, client, sandwich) {
@@ -54,9 +55,12 @@ function addplate(id, name) {
     e.addEventListener("click", () => {
         radiocheck(e,  "plate",0);
         document.querySelectorAll("input[name=ingredient],input[name=sauce]").forEach( el => {
-            el.disabled = !e.checked;
-            if (!e.checked)
+            if (e.checked && !db["plate"][e.id]["avoid ingredient"])
+                el.disabled = false;
+            else {
+                el.disabled = true;
                 el.checked = false
+            }
         });
     })
 }
@@ -107,6 +111,11 @@ function radiocheck (e, n, p) {
             name = document.querySelector(`label[for=${e.id}]`).innerHTML;
         }
         current[n] = curr;
+        if (curr)
+            current["price"][n] = db[n][curr]["price"];
+        else
+            current["price"][n] = 0;
+        price();
         document.querySelectorAll("#resume p")[p].innerHTML = name;
     }
 }
@@ -120,6 +129,11 @@ function checkcheck(e, n, p, l) {
         if (!e.checked)
             e.disabled = current[n].length === l
     });
+    current["price"][n] = 0;
+    for (let i of current[n]) {
+        current["price"][n] += db[n][i]["price"]
+    }
+    price();
     document.querySelectorAll("#resume p")[p].innerHTML = current[n].join(" - ");
 }
 
@@ -155,6 +169,14 @@ function error(e) {
     list.appendChild(e);
 }
 
+function price () {
+    let p = 0;
+    for (let i in current["price"]) {
+        p += current["price"][i]
+    }
+    document.querySelector("#resume h2").innerHTML = p+"€";
+}
+
 socket.on("connect", data => {
     if (data === "ok") {
         socket.emit("list plate");
@@ -185,6 +207,7 @@ socket.on("list plate", data => {
     }
     for (let p of data.list) {
         addplate(p.id, p.name);
+        db["plate"][p.id] = {"name": p.name, "price": p.price, "avoid ingredient": p["avoid ingredient"]}
     }
 });
 
@@ -196,6 +219,7 @@ socket.on("list ingredient", data => {
     }
     for (let i of data.list) {
         addingredient(i.id, i.name);
+        db["ingredient"][i.id] = {"name": i.name, "price": i.price}
     }
 });
 
@@ -207,6 +231,7 @@ socket.on("list sauce", data => {
     }
     for (let s of data.list) {
         addsauce(s.id, s.name);
+        db["sauce"][s.id] = {"name": s.name, "price": s.price}
     }
 });
 
@@ -218,6 +243,7 @@ socket.on("list drink", data => {
     }
     for (let d of data.list) {
         adddrink(d.id, d.name);
+        db["drink"][d.id] = {"name": d.name, "price": d.price}
     }
 });
 
@@ -229,6 +255,7 @@ socket.on("list dessert", data => {
     }
     for (let d of data.list) {
         adddessert(d.id, d.name);
+        db["dessert"][d.id] = {"name": d.name, "price": d.price}
     }
 });
 
@@ -269,7 +296,7 @@ document.querySelector(".validation").addEventListener("click", ev => {
 
     current["client"] = user.value;
     socket.emit("add command", current);
-    current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null};
+    current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null, "price": {}};
     document.querySelectorAll("input[name=plate],input[name=drink],input[name=dessert]").forEach( e => {
         e.checked = false;
     });

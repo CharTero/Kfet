@@ -197,7 +197,7 @@ def errcmd(json):
 def lsplate():
     plates = []
     for p in Plate.query.all():
-        plates.append({"id": p.id, "name": p.name})
+        plates.append({"id": p.id, "name": p.name, "price": p.price, "avoid ingredient": p.avoid_ingredient})
     emit("list plate", {"list": plates})
 
 
@@ -205,8 +205,8 @@ def lsplate():
 @authenticated_only
 def lsingredient():
     ingredients = []
-    for p in Ingredient.query.all():
-        ingredients.append({"id": p.id, "name": p.name})
+    for i in Ingredient.query.all():
+        ingredients.append({"id": i.id, "name": i.name, "price": i.price})
     emit("list ingredient", {"list": ingredients})
 
 
@@ -214,8 +214,8 @@ def lsingredient():
 @authenticated_only
 def lssauce():
     sauces = []
-    for p in Sauce.query.all():
-        sauces.append({"id": p.id, "name": p.name})
+    for s in Sauce.query.all():
+        sauces.append({"id": s.id, "name": s.name, "price": s.price})
     emit("list sauce", {"list": sauces})
 
 
@@ -223,8 +223,8 @@ def lssauce():
 @authenticated_only
 def lsdrink():
     drinks = []
-    for p in Drink.query.all():
-        drinks.append({"id": p.id, "name": p.name})
+    for d in Drink.query.all():
+        drinks.append({"id": d.id, "name": d.name, "price": d.price})
     emit("list drink", {"list": drinks})
 
 
@@ -232,8 +232,8 @@ def lsdrink():
 @authenticated_only
 def lsdessert():
     desserts = []
-    for p in Dessert.query.all():
-        desserts.append({"id": p.id, "name": p.name})
+    for d in Dessert.query.all():
+        desserts.append({"id": d.id, "name": d.name, "price": d.price})
     emit("list dessert", {"list": desserts})
 
 

@@ -63,6 +63,9 @@ class Plate(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
+    price = db.Column(db.Integer, default=0)
+    avoid_ingredient = db.Column(db.Boolean, default=False)
+
     command = db.relationship("Command", backref="plate", lazy="dynamic")
 
     def __repr__(self):
@@ -72,6 +75,8 @@ class Plate(db.Model):
 class Ingredient(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
+
+    price = db.Column(db.Float, default=0)
 
     command = db.relationship("Command", secondary="get")
 
@@ -91,6 +96,8 @@ class Sauce(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
+    price = db.Column(db.Float, default=0)
+
     command = db.relationship("Command", secondary="cover")
 
     def __repr__(self):
@@ -109,6 +116,8 @@ class Drink(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
+    price = db.Column(db.Float, default=0)
+
     command = db.relationship("Command", backref="drink", lazy="dynamic")
 
     def __repr__(self):
@@ -118,6 +127,8 @@ class Drink(db.Model):
 class Dessert(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
+
+    price = db.Column(db.Float, default=0)
 
     command = db.relationship("Command", backref="dessert", lazy="dynamic")
 
