@@ -10,8 +10,9 @@ let radios = {"plate": null, "drink": null, "dessert": null};
 
 
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state, client, sandwich) {
-    if (!sandwich)
-        sandwich = "";
+    for (let i of ["plate", "ingredient", "sauce", "drink", "dessert", "state", "sandwich"])
+        if (!eval(i))
+            eval(`${i} = ""`);
     list.insertAdjacentHTML("beforeend", `<div class="com" id="cmd${id}"> <button class="donner">Donnée</button> <h1>${id}</h1> <div class="spec"> <h2>${sandwich}</h2><h3>${client}</h3><p>${plate}</p><p>${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p><button class="annuler">Annuler</button><button class="erreur">Erreur</button> </div> </div>`);
     let e = document.querySelector(`.liste #cmd${id}`);
     e.addEventListener( "click" ,ev => {

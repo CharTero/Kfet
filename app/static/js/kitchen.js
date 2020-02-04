@@ -4,8 +4,9 @@ let done = document.getElementById("realisee");
 let waiting = document.getElementById("attente");
 
 function addcmd(id, plate, ingredient, sauce, drink, dessert, state, client, sandwich) {
-    if (!sandwich)
-        sandwich = "";
+    for (let i of ["plate", "ingredient", "sauce", "drink", "dessert", "state", "sandwich"])
+        if (!eval(i))
+            eval(`${i} = ""`);
     done.insertAdjacentHTML("beforeend", `<div id=cmd${id}> <h1>${id}</h1><h2>${sandwich}</h2><h3>${client}</h3><p>${plate} | ${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p> </div>`);
     let e = document.getElementById(`cmd${id}`);
     switch (state) {
