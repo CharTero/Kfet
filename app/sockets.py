@@ -22,7 +22,6 @@ def authenticated_only(f):
 def command_json(c):
     ingredient = " - ".join([s.id for s in c.content])
     sauces = " - ".join([s.id for s in c.sauce])
-    sandwich = None
     if c.error:
         state = "error"
     elif c.give:
@@ -35,13 +34,16 @@ def command_json(c):
         state = "waiting"
     else:
         state = "unknown"
-    if c.sandwich_id:
-        try:
-            sandwich = User.query.get(c.sandwich_id).username
-        except AttributeError:
-            pass
+    try:
+        client = User.query.get(c.client_id).username
+    except AttributeError:
+        client = None
+    try:
+        sandwich = User.query.get(c.sandwich_id).username
+    except AttributeError:
+        sandwich = None
     return {"id": c.number, "plate": c.plate_id, "ingredient": ingredient, "sauce": sauces, "drink": c.drink_id,
-            "dessert": c.dessert_id, "state": state, "sandwich": sandwich}
+            "dessert": c.dessert_id, "state": state, "sandwich": sandwich, "client": client}
 
 
 @socketio.on("connect")

@@ -729,11 +729,11 @@ audio{
   color: rgb(122, 233, 105);
 }
 
-#attente div :nth-child(2), #attente div :nth-child(3) {
+#attente div :nth-child(2), #attente div :nth-child(4), #attente div :nth-child(5) {
   display: none;
 }
 
-#realisee div :nth-child(2), #realisee div :nth-child(3){
+#realisee div :nth-child(2), #realisee div :nth-child(4), #realisee div :nth-child(5){
   display: none;
 }
 

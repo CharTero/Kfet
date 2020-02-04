@@ -3,10 +3,10 @@ let WIP = document.getElementById("encours");
 let done = document.getElementById("realisee");
 let waiting = document.getElementById("attente");
 
-function addcmd(id, plate, ingredient, sauce, drink, dessert, state, sandwich) {
+function addcmd(id, plate, ingredient, sauce, drink, dessert, state, client, sandwich) {
     if (!sandwich)
         sandwich = "";
-    done.insertAdjacentHTML("beforeend", `<div id=cmd${id}> <h1>${id}</h1><h2>${sandwich}</h2><p>${plate} | ${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p> </div>`);
+    done.insertAdjacentHTML("beforeend", `<div id=cmd${id}> <h1>${id}</h1><h2>${sandwich}</h2><h3>${client}</h3><p>${plate} | ${ingredient}</p><p>${sauce}</p><p>${drink}</p><p>${dessert}</p> </div>`);
     let e = document.getElementById(`cmd${id}`);
     switch (state) {
         case "WIP":
@@ -75,7 +75,7 @@ socket.on("list command", data => {
         }
     }
     for (let c of data.list) {
-        addcmd(c.id, c.plate, c.ingredient, c.sauce, c.drink, c.dessert, c.state, c.sandwich);
+        addcmd(c.id, c.plate, c.ingredient, c.sauce, c.drink, c.dessert, c.state, c.client,c.sandwich);
     }
     waiter();
 });
@@ -88,7 +88,7 @@ socket.on("list service", data => {
 });
 
 socket.on("new command", data => {
-    addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state, data.sandwich);
+    addcmd(data.id, data.plate, data.ingredient, data.sauce, data.drink, data.dessert, data.state, data.client, data.sandwich);
     waiter();
 });
 
