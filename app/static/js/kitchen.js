@@ -117,3 +117,11 @@ socket.on("glitched command", data => {
     finish(document.getElementById(`cmd${data.id}`));
     waiter();
 });
+
+document.addEventListener("keyup", ev => {
+    let keys = [["Digit1", "Numpad1"], ["Digit2", "Numpad2"], ["Digit3", "Numpad3"]];
+    for (let i=0; i<keys.length; i++) {
+        if (keys[i].indexOf(ev.code) >= 0)
+            WIP.children[i].click()
+    }
+});
