@@ -65,6 +65,7 @@ class Plate(db.Model):
 
     price = db.Column(db.Integer, default=0)
     avoid_ingredient = db.Column(db.Boolean, default=False)
+    avoid_sauce = db.Column(db.Boolean, default=False)
 
     command = db.relationship("Command", backref="plate", lazy="dynamic")
 

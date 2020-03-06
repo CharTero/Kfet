@@ -54,8 +54,16 @@ function addplate(id, name) {
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         radiocheck(e,  "plate",0);
-        document.querySelectorAll("input[name=ingredient],input[name=sauce]").forEach( el => {
+        document.querySelectorAll("input[name=ingredient]").forEach( el => {
             if (e.checked && !db["plate"][e.id]["avoid ingredient"])
+                el.disabled = false;
+            else {
+                el.disabled = true;
+                el.checked = false
+            }
+        });
+        document.querySelectorAll("input[name=sauce]").forEach( el => {
+            if (e.checked && !db["plate"][e.id]["avoid sauce"])
                 el.disabled = false;
             else {
                 el.disabled = true;
@@ -207,7 +215,7 @@ socket.on("list plate", data => {
     }
     for (let p of data.list) {
         addplate(p.id, p.name);
-        db["plate"][p.id] = {"name": p.name, "price": p.price, "avoid ingredient": p["avoid ingredient"]}
+        db["plate"][p.id] = {"name": p.name, "price": p.price, "avoid ingredient": p.avoid_ingredient, "avoid sauce": p.avoid_sauce}
     }
 });
 

@@ -197,7 +197,8 @@ def errcmd(json):
 def lsplate():
     plates = []
     for p in Plate.query.all():
-        plates.append({"id": p.id, "name": p.name, "price": p.price, "avoid ingredient": p.avoid_ingredient})
+        plates.append({"id": p.id, "name": p.name, "price": p.price, "avoid_ingredient": p.avoid_ingredient,
+                       "avoid_sauce": p.avoid_sauce})
     emit("list plate", {"list": plates})
 
 
