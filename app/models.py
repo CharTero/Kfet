@@ -42,6 +42,7 @@ class Command(db.Model):
     sandwich_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     client_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
+    price = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, default=datetime.datetime.now().date)
     take = db.Column(db.Time, default=datetime.datetime.now().time)
     done = db.Column(db.Time)
@@ -63,7 +64,7 @@ class Plate(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
-    price = db.Column(db.Integer, default=0)
+    price = db.Column(db.Float, default=0)
     avoid_ingredient = db.Column(db.Boolean, default=False)
     avoid_sauce = db.Column(db.Boolean, default=False)
 

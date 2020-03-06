@@ -168,13 +168,14 @@ function error(e) {
     list.appendChild(e);
 }
 
-function price () {
+function price() {
     let p = 0;
     for (let i in current["price"]) {
         p += current["price"][i]
     }
     p = p.toFixed(2);
     document.querySelector("#resume h2").innerHTML = p+"€";
+    return p;
 }
 
 socket.on("connect", data => {
@@ -296,6 +297,7 @@ document.querySelector(".validation").addEventListener("click", ev => {
 
     current["client"] = user.value;
     current["pc"] = pc_id;
+    current["price"] = price();
     socket.emit("add command", current);
     current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null, "price": {}};
     document.querySelectorAll("input[name=plate],input[name=drink],input[name=dessert]").forEach( e => {
@@ -311,6 +313,7 @@ document.querySelector(".validation").addEventListener("click", ev => {
     user.value = "";
     user.style.color = "";
     document.getElementById("user_list").innerHTML = "";
+    document.querySelector("#resume h2").innerHTML = "0€";
 });
 
 document.getElementById("user").addEventListener("keyup", ev => {hinter(ev)});

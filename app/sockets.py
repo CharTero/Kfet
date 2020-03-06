@@ -72,7 +72,6 @@ def addcmd(json):
             Command.number.desc()).first().number + 1
     except AttributeError:
         c.number = 1
-    c.pc_id = json["pc"]
     if all(i in json and json[i] for i in ["firstname", "lastname", "client"]):
         db.session.add(User(username=json["client"], firstname=json["firstname"], lastname=json["lastname"]))
     if "client" in json:
@@ -80,6 +79,18 @@ def addcmd(json):
             c.client_id = User.query.filter_by(username=json["client"]).first().id
         except AttributeError:
             c.client_id = User.query.filter_by(username="dummy").first().id
+    if "pc" in json:
+        try:
+            c.pc_id = User.query.filter_by(username=json["pc"]).first().id
+        except AttributeError:
+            c.pc_id = User.query.filter_by(username="dummy").first().id
+    if "price" in json:
+        try:
+            c.price = json["price"]
+        except AttributeError:
+            c.price = -1
+    else:
+        c.price = -1
     if "plate" in json:
         try:
             c.plate_id = Plate.query.get(json["plate"]).id
