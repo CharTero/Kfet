@@ -105,3 +105,14 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# PyCharm
+.idea
+
+# Database
+app.db
+migrations
+
+
+# flask key
+key.ini
