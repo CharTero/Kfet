@@ -137,7 +137,6 @@ class Dessert(db.Model):
 
 
 class Service(db.Model):
-    pc_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     sandwich1_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     sandwich2_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
     sandwich3_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)

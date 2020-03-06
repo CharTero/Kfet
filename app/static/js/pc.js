@@ -295,6 +295,7 @@ document.querySelector(".validation").addEventListener("click", ev => {
     }
 
     current["client"] = user.value;
+    current["pc"] = pc_id;
     socket.emit("add command", current);
     current = {"plate": null, "ingredient": [], "sauce": [], "drink": null, "dessert": null, "price": {}};
     document.querySelectorAll("input[name=plate],input[name=drink],input[name=dessert]").forEach( e => {

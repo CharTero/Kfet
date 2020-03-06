@@ -72,7 +72,7 @@ def addcmd(json):
             Command.number.desc()).first().number + 1
     except AttributeError:
         c.number = 1
-    c.pc_id = current_user.id
+    c.pc_id = json["pc"]
     if all(i in json and json[i] for i in ["firstname", "lastname", "client"]):
         db.session.add(User(username=json["client"], firstname=json["firstname"], lastname=json["lastname"]))
     if "client" in json:
@@ -256,7 +256,7 @@ def lsservice(json=None, broadcast=False):
     service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
     s = {}
     if service:
-        for i in [["pc", service.pc_id], ["sandwich1", service.sandwich1_id], ["sandwich2", service.sandwich2_id],
+        for i in [["sandwich1", service.sandwich1_id], ["sandwich2", service.sandwich2_id],
                   ["sandwich3", service.sandwich3_id], ["commi1", service.commi1_id], ["commi2", service.commi2_id]]:
             s[i[0]] = User.query.get(i[1]).username
     emit("list service", s, broadcast=broadcast)
@@ -268,13 +268,13 @@ def setservice(json):
     service = Service.query.filter_by(date=datetime.datetime.now().date()).first()
     if not service:
         service = Service()
-    if all(i in json and json[i] for i in ["pc", "sandwich1", "sandwich2", "sandwich3", "commi1", "commi2"]):
-        for i in [["pc", "pc_id"], ["sandwich1", "sandwich1_id"], ["sandwich2", "sandwich2_id"],
+    if all(i in json and json[i] for i in ["sandwich1", "sandwich2", "sandwich3", "commi1", "commi2"]):
+        for i in [["sandwich1", "sandwich1_id"], ["sandwich2", "sandwich2_id"],
                   ["sandwich3", "sandwich3_id"], ["commi1", "commi1_id"], ["commi2", "commi2_id"]]:
             setattr(service, i[1], User.query.filter_by(username=json[i[0]]).first().id)
     else:
         dummy = User.query.filter_by(username="dummy").first().id
-        for i in ["pc_id", "sandwich1_id","sandwich2_id", "sandwich3_id", "commi1_id", "commi2_id"]:
+        for i in ["sandwich1_id","sandwich2_id", "sandwich3_id", "commi1_id", "commi2_id"]:
             setattr(service, i[1], dummy)
     service.sandwich1 = False
     service.sandwich2 = False
