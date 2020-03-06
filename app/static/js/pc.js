@@ -54,21 +54,12 @@ function addplate(id, name) {
     let e = document.querySelector(`input[id=${id} ]`);
     e.addEventListener("click", () => {
         radiocheck(e,  "plate",0);
-        document.querySelectorAll("input[name=ingredient]").forEach( el => {
-            if (e.checked && !db["plate"][e.id]["avoid ingredient"])
-                el.disabled = false;
-            else {
-                el.disabled = true;
-                el.checked = false
-            }
+        document.querySelectorAll("input[name=ingredient],input[name=sauce]").forEach( el => {
+            if (el.checked)
+                el.click();
         });
-        document.querySelectorAll("input[name=sauce]").forEach( el => {
-            if (e.checked && !db["plate"][e.id]["avoid sauce"])
-                el.disabled = false;
-            else {
-                el.disabled = true;
-                el.checked = false
-            }
+        document.querySelectorAll("input[name=ingredient],input[name=sauce]").forEach( el => {
+            el.disabled = !(e.checked && !db["plate"][e.id]["avoid " + el.name]);
         });
     })
 }
@@ -182,6 +173,7 @@ function price () {
     for (let i in current["price"]) {
         p += current["price"][i]
     }
+    p = p.toFixed(2);
     document.querySelector("#resume h2").innerHTML = p+"€";
 }
 
